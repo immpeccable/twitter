@@ -1,19 +1,23 @@
 export interface I_PROFILE {
-    image_url: string, 
-    profile_name: string,
-    user_name: string,
-
+  image_url: string;
+  profile_name: string;
+  user_name: string;
 }
 
 export interface I_POST {
-    from: I_PROFILE,
-    context: string,
-    likes: number,
-    retweets: number,
-    mentions: number,
+  from: I_PROFILE;
+  context: string;
+  likes: number;
+  retweets: number;
+  mentions: number;
 }
 
 export interface I_FEED {
-    of: I_PROFILE,
-    posts: I_POST[],
+  of: I_PROFILE;
+  posts: I_POST[];
+}
+
+export interface I_FEED_STORE {
+  feed: I_FEED;
+  setFeed: (feed: I_FEED) => void;
 }
