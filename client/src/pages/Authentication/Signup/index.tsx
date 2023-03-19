@@ -49,7 +49,7 @@ export const Signup = () => {
   async function handleSignup(e: FormEvent<HTMLInputElement>) {
     e.preventDefault();
     console.log(state);
-    const resp = await axios.post("http://localhost:8080/create_user", state);
+    const resp = await axios.post("http://localhost:8080/create-user", state);
     console.log(resp);
   }
 
