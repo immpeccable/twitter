@@ -7,6 +7,8 @@ export interface I_PROFILE {
   image_url: string;
   profile_name: string;
   user_name: string;
+  password: string;
+  id?: string;
 }
 
 export interface I_TWEET {

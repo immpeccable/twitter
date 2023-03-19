@@ -5,6 +5,8 @@ export const profile_1: I_PROFILE = {
     "https://pbs.twimg.com/media/FrhPMuPWwAMeCvV?format=jpg&name=large",
   profile_name: "tuna",
   user_name: "thlikelym_diorum",
+  password: "123",
+  id: "123",
 };
 
 export const profile_2: I_PROFILE = {
@@ -12,6 +14,8 @@ export const profile_2: I_PROFILE = {
     "https://pbs.twimg.com/media/FrhPMuPWwAMeCvV?format=jpg&name=large",
   profile_name: "tuna",
   user_name: "thlikelym_diorum",
+  password: "123",
+  id: "123",
 };
 
 export const post_1: I_TWEET = {
