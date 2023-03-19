@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import tmpImage from "../../utils/images/twitter.png";
 import { FeedContext } from "../../contexts/FeedContext";
+import { FEED_OPTIONS } from "../../contexts/FeedContext/types";
 
 export const Header = () => {
-  const { feed, setFeed } = useContext(FeedContext);
+  const { feed, setFeed, feedType, setFeedType } = useContext(FeedContext);
   return (
     <header>
       <div className="flex flex-row p-4">
@@ -14,14 +15,32 @@ export const Header = () => {
         <img className="w-8 h-8 mx-auto" src={tmpImage} />
       </div>
       <nav className="flex flex-row border-b-[1px] border-gray-400 justify-center">
-        <div className="flex flex-row justify-center grow hover text-opacity-80 hover:bg-white hover:bg-opacity-10 focus-within:font-bold focus-within:text-opacity-100">
-          <button className="w-fit text-center focus:border-b-4 p-4 focus:border-blue-700">
-            Sana Özel
+        <div
+          onClick={() => setFeedType(FEED_OPTIONS.for_you)}
+          className="flex flex-row justify-center grow hover text-opacity-80 hover:bg-white hover:bg-opacity-10 "
+        >
+          <button
+            className={
+              feedType === FEED_OPTIONS.for_you
+                ? "w-fit text-center border-b-4 p-4 border-blue-700 font-bold text-opacity-100"
+                : "w-fit text-center font-semibold opacity-60"
+            }
+          >
+            Special For You
           </button>
         </div>
-        <div className="flex flex-row justify-center grow hover text-opacity-80 hover:bg-white hover:bg-opacity-10 focus-within:font-bold focus-within:text-opacity-100">
-          <button className="w-fit text-center focus:border-b-4 p-4 focus:border-blue-700">
-            Takip Edilenler
+        <div
+          onClick={() => setFeedType(FEED_OPTIONS.followings)}
+          className="flex flex-row justify-center grow hover text-opacity-80 hover:bg-white hover:bg-opacity-10 "
+        >
+          <button
+            className={
+              feedType === FEED_OPTIONS.followings
+                ? "w-fit text-center border-b-4 p-4 border-blue-700 font-bold text-opacity-100"
+                : "w-fit text-center font-semibold opacity-60"
+            }
+          >
+            Followings
           </button>
         </div>
       </nav>

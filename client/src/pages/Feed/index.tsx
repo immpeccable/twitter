@@ -1,5 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Header } from "../../Components/Header";
+import { Tweet } from "../../Components/Tweet/indes";
+import { FeedContext } from "../../contexts/FeedContext";
 
 export const Feed = () => {
-  return <div>feed</div>;
+  const { feed, setFeed } = useContext(FeedContext);
+  console.log(feed.tweets);
+  return (
+    <>
+      <Header />
+
+      <section className="grid grid-cols-1">
+        {feed.tweets.map((tweet) => (
+          <Tweet tweet={tweet} />
+        ))}
+      </section>
+    </>
+  );
 };
