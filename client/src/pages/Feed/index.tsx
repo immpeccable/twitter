@@ -5,15 +5,13 @@ import { FeedContext } from "../../contexts/FeedContext";
 
 export const Feed = () => {
   const { feed, setFeed } = useContext(FeedContext);
-  console.log(feed.tweets);
+  console.log(feed);
   return (
     <>
       <Header />
 
       <section className="grid grid-cols-1">
-        {feed.tweets.map((tweet) => (
-          <Tweet tweet={tweet} />
-        ))}
+        {feed.tweets && feed.tweets!.map((tweet) => <Tweet tweet={tweet} />)}
       </section>
     </>
   );

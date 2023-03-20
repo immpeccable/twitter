@@ -10,7 +10,7 @@ export const Header = () => {
       <div className="flex flex-row p-4">
         <img
           className="w-8 h-8 rounded-full object-cover"
-          src={feed.of.image_url}
+          src={feed.of!.image_url}
         />
         <img className="w-8 h-8 mx-auto" src={tmpImage} />
       </div>

@@ -20,8 +20,8 @@ export interface I_TWEET {
 }
 
 export interface I_FEED {
-  of: I_PROFILE;
-  tweets: I_TWEET[];
+  of?: I_PROFILE;
+  tweets?: I_TWEET[];
 }
 
 export interface I_FEED_STORE {

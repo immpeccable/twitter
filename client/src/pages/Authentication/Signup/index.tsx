@@ -3,6 +3,8 @@ import { I_PROFILE } from "../../../contexts/FeedContext/types";
 import { I_REDUCER_ACTION } from "./types";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { signUpApiCall } from "./api";
 
 function reducer(
   state: I_PROFILE,
@@ -45,12 +47,17 @@ const initialState: I_PROFILE = {
 
 export const Signup = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const signUpMutation = useMutation({
+    mutationFn: (e: FormEvent<HTMLInputElement>) => signUpApiCall(e, state),
+    mutationKey: ["sign-up"],
+  });
 
-  async function handleSignup(e: FormEvent<HTMLInputElement>) {
-    e.preventDefault();
-    console.log(state);
-    const resp = await axios.post("http://localhost:8080/create-user", state);
-    console.log(resp);
+  const { status } = signUpMutation;
+  if (status == "error") {
+    return <div>something went wrong, please try aagain</div>;
+  }
+  if (status == "loading") {
+    return <div>User is being created, please hold...</div>;
   }
 
   return (
@@ -135,7 +142,7 @@ export const Signup = () => {
         value="Sign up"
         className="rounded-full bg-green-400 text-black font-semibold text-lg
          text-center py-4 w-[80vw] max-w-[600px]"
-        onClick={(e) => handleSignup(e)}
+        onClick={(e) => signUpMutation.mutate(e)}
       />
     </form>
   );

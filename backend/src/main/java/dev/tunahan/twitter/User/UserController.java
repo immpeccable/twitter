@@ -23,10 +23,15 @@ public class UserController {
 
     @PostMapping("/create-user")
     public ResponseEntity<User> createUser(@RequestBody Map<String, String> payload) {
-        System.out.println("hello world!!!!");
         return new ResponseEntity<User>(
                 service.createUser(payload.get("profile_name"), payload.get("user_name"), payload.get("image_url"),
                         payload.get("password")),
                 HttpStatus.OK);
+    }
+
+    @PostMapping("/login-user")
+    public ResponseEntity<LoginResponseObject> loginUser(@RequestBody Map<String, String> payload) {
+        LoginResponseObject response = service.logUser(payload.get("user_name"), payload.get("password"));
+        return new ResponseEntity<LoginResponseObject>(response, HttpStatus.OK);
     }
 }

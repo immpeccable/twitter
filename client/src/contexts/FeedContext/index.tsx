@@ -1,4 +1,5 @@
-import React, { createContext, useState, useMemo } from "react";
+import React, { createContext, useState, useMemo, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { I_FEED, I_FEED_STORE, FEED_OPTIONS } from "./types";
 import { dummyFeed } from "./utils";
 
@@ -14,12 +15,19 @@ type ProviderProps = {
 };
 
 export const FeedProvider = ({ children }: ProviderProps) => {
-  const [feed, setFeed] = useState<I_FEED>(dummyFeed);
+  const navigate = useNavigate();
+  const [feed, setFeed] = useState<I_FEED>({});
   const [feedType, setFeedType] = useState<FEED_OPTIONS>(FEED_OPTIONS.for_you);
 
   const feedTypeMemo = useMemo(() => {
     return { feedType, setFeedType };
   }, [feedType, setFeedType]);
+
+  useEffect(() => {
+    if (feed.of) {
+      navigate("/home");
+    }
+  }, [feed]);
 
   return (
     <FeedContext.Provider value={{ feed, setFeed, ...feedTypeMemo }}>

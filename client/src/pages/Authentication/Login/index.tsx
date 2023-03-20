@@ -1,6 +1,37 @@
-import React from "react";
+import { useMutation } from "@tanstack/react-query";
+import React, { FormEvent, useContext, useRef } from "react";
+import { FeedContext } from "../../../contexts/FeedContext";
+import { loginApiCall } from "./api";
 
 export const Login = () => {
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const { feed, setFeed } = useContext(FeedContext);
+
+  async function handleLogin(e: FormEvent<HTMLInputElement>) {
+    e.preventDefault();
+    const resp = await loginApiCall(e, {
+      user_name: usernameRef!.current!.value,
+      password: passwordRef!.current!.value,
+    });
+    setFeed({ ...feed, of: resp.data.user });
+  }
+
+  const loginMutation = useMutation({
+    mutationFn: (e: FormEvent<HTMLInputElement>) => handleLogin(e),
+    mutationKey: ["login"],
+    onMutate: () => {},
+  });
+
+  const { status } = loginMutation;
+
+  if (status == "error") {
+    return <div>Something went wrong, please try again.</div>;
+  }
+  if (status == "loading") {
+    return <div>Logging in, please hold on...</div>;
+  }
+
   return (
     <form className="flex flex-col gap-4 items-center">
       <div
@@ -13,6 +44,7 @@ export const Login = () => {
           className="peer bg-blue-100 bg-inherit text-white mt-6 placeholder-shown:mt-0"
           type="text"
           placeholder="Username"
+          ref={usernameRef}
         />
         <label
           htmlFor="username"
@@ -32,6 +64,7 @@ export const Login = () => {
           className="peer bg-blue-100 p-[1px] bg-inherit text-white mt-6 placeholder-shown:mt-0"
           type="password"
           placeholder="Password"
+          ref={passwordRef}
         />
         <label
           htmlFor="password"
@@ -46,6 +79,7 @@ export const Login = () => {
         value="Log in"
         className="mt-10 rounded-full bg-white text-black font-semibold text-lg
          text-center py-4 w-[80vw] max-w-[600px]"
+        onClick={(e) => loginMutation.mutate(e)}
       />
     </form>
   );
