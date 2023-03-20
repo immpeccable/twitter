@@ -34,4 +34,4 @@ build/
 
 ## env variables
 
-.env
+/src/main/resources/.env
