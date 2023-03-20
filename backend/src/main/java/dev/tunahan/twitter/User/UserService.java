@@ -11,6 +11,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import dev.tunahan.twitter.config.UserAuthenticationProvider;
+
 @Service
 public class UserService {
 
@@ -41,5 +43,16 @@ public class UserService {
             return new LoginResponseObject(Status.NOT_FOUND);
         }
         return new LoginResponseObject(Status.FOUND, user);
+    }
+
+    public User getUser(String user_name) {
+        List<Criteria> criterias = new ArrayList<Criteria>();
+        Query query = new Query();
+        if (user_name != null && !user_name.isEmpty()) {
+            criterias.add(Criteria.where("user_name").is(user_name));
+        }
+        query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[criterias.size()])));
+        User user = mongoTemplate.findOne(query, User.class);
+        return user;
     }
 }

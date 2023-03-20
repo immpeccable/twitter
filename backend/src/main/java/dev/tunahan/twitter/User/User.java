@@ -23,8 +23,17 @@ public class User {
         this.image_url = image_url;
     }
 
+    User(String profile_name, String user_name, String image_url, String password, String token) {
+        this.profile_name = profile_name;
+        this.user_name = user_name;
+        this.password = password;
+        this.image_url = image_url;
+        this.token = token;
+    }
+
     private String profile_name;
     private String user_name;
     private String image_url;
     private String password;
+    private String token;
 }

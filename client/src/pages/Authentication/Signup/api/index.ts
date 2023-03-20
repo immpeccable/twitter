@@ -8,5 +8,6 @@ export async function signUpApiCall(
   state: I_PROFILE
 ) {
   e.preventDefault();
-  const resp = await axios.post("http://localhost:8080/create-user", state);
+  const resp = await axios.post("http://localhost:8080/sign-up", state);
+  console.log(resp);
 }

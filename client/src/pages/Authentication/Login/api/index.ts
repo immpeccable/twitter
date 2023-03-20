@@ -7,6 +7,7 @@ export async function loginApiCall(
   e: FormEvent<HTMLInputElement>,
   logInfo: I_LOG_INFO
 ) {
-  const resp = await axios.post("http://localhost:8080/login-user", logInfo);
+  const resp = await axios.post("http://localhost:8080/sign-in", logInfo);
+  localStorage.setItem("jwt_token", resp.data.user.token);
   return resp;
 }
