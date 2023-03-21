@@ -5,14 +5,18 @@ import { FeedContext } from "../../contexts/FeedContext";
 
 export const Feed = () => {
   const { feed, setFeed } = useContext(FeedContext);
-  console.log(feed);
   return (
     <>
-      <Header />
+      {feed.of && (
+        <>
+          <Header />
 
-      <section className="grid grid-cols-1">
-        {feed.tweets && feed.tweets!.map((tweet) => <Tweet tweet={tweet} />)}
-      </section>
+          <section className="grid grid-cols-1">
+            {feed.tweets &&
+              feed.tweets?.map((tweet) => <Tweet tweet={tweet} />)}
+          </section>
+        </>
+      )}
     </>
   );
 };

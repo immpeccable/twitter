@@ -9,17 +9,17 @@ public class CredentialsDto {
         super();
     }
 
-    public CredentialsDto(String login, char[] password) {
-        this.user_name = login;
+    public CredentialsDto(String user_name, char[] password) {
+        this.user_name = user_name;
         this.password = password;
     }
 
-    public String getLogin() {
+    public String getUser_name() {
         return user_name;
     }
 
-    public void setLogin(String login) {
-        this.user_name = login;
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
     public char[] getPassword() {

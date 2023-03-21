@@ -29,18 +29,22 @@ public class UsernamePasswordAuthFilter extends OncePerRequestFilter {
             HttpServletResponse httpServletResponse,
             FilterChain filterChain) throws ServletException, IOException {
         System.out.println("Validation username password");
-        if ("/sign-ihn".equals(httpServletRequest.getServletPath())
+        if ("/sign2-in".equals(httpServletRequest.getServletPath())
                 && HttpMethod.POST.matches(httpServletRequest.getMethod())) {
             CredentialsDto credentialsDto = MAPPER.readValue(httpServletRequest.getInputStream(), CredentialsDto.class);
+            System.out.println("Password authentication");
+            System.out.println(credentialsDto.getUser_name());
             try {
                 SecurityContextHolder.getContext().setAuthentication(
                         userAuthenticationProvider.validateCredentials(credentialsDto));
+                System.out.println("end of try");
             } catch (RuntimeException e) {
+                System.out.println("catched");
                 SecurityContextHolder.clearContext();
                 throw e;
             }
         }
-
+        System.out.println("ı am out");
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

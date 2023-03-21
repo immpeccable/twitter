@@ -34,7 +34,7 @@ public class AuthenticationService {
 
         List<Criteria> criterias = new ArrayList<Criteria>();
         Query query = new Query();
-        String user_name = credentialsDto.getLogin();
+        String user_name = credentialsDto.getUser_name();
         char[] password = credentialsDto.getPassword();
         if (user_name != null && !user_name.isEmpty()) {
             criterias.add(Criteria.where("user_name").is(user_name));
@@ -49,6 +49,7 @@ public class AuthenticationService {
             throw new RuntimeException("Invalid password");
         }
         throw new RuntimeException("Invalid Username");
+
     }
 
     public User findByLogin(String login) {

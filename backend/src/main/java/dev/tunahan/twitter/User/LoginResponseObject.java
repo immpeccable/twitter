@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 enum Status {
-    FOUND,
-    NOT_FOUND
+    PASS,
+    INVALID_USERNAME,
+    INVALID_PASSWORD
 }
 
 @Data
@@ -16,6 +17,11 @@ public class LoginResponseObject {
 
     LoginResponseObject(Status status) {
         this.status = status;
+    }
+
+    LoginResponseObject(User user, Status status) {
+        this.status = status;
+        this.user = user;
     }
 
     private Status status;
