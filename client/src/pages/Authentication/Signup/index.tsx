@@ -43,6 +43,7 @@ const initialState: I_PROFILE = {
   image_url:
     "https://pbs.twimg.com/media/FrhPMuPWwAMeCvV?format=jpg&name=large",
   password: "",
+  id: "",
 };
 
 export const Signup = () => {

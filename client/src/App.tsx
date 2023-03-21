@@ -11,16 +11,28 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        <FeedProvider>
-          <Routes>
-            <Route path="/" element={<Entrance />}>
-              <Route path="login" element={<Login />} />
-              <Route path="signup" element={<Signup />} />
-            </Route>
-            <Route path="/home" element={<Feed />} />
-            <Route path="/profile/:user_name" element={<Profile />} />
-          </Routes>
-        </FeedProvider>
+        <Routes>
+          <Route path="/" element={<Entrance />}>
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+          </Route>
+          <Route
+            path="/home"
+            element={
+              <FeedProvider>
+                <Feed />
+              </FeedProvider>
+            }
+          />
+          <Route
+            path="/profile/:user_name"
+            element={
+              <FeedProvider>
+                <Profile />
+              </FeedProvider>
+            }
+          />
+        </Routes>
       </BrowserRouter>
     </div>
   );

@@ -1,3 +1,5 @@
+import { UseMutationResult } from "@tanstack/react-query";
+
 export enum FEED_OPTIONS {
   for_you = "Special For You",
   followings = "Followings",
@@ -8,15 +10,15 @@ export interface I_PROFILE {
   profile_name: string;
   user_name: string;
   password: string;
-  id?: string;
+  readonly id: string;
 }
 
 export interface I_TWEET {
-  from: I_PROFILE;
+  readonly from: string;
   context: string;
-  likes: number;
-  retweets: number;
-  mentions: number;
+  likes?: number;
+  retweets?: number;
+  mentions?: number;
 }
 
 export interface I_FEED {
@@ -29,4 +31,7 @@ export interface I_FEED_STORE {
   setFeed: (feed: I_FEED) => void;
   feedType: FEED_OPTIONS;
   setFeedType: (feedType: FEED_OPTIONS) => void;
+  tweet: I_TWEET;
+  setTweet: (tweet: I_TWEET) => void;
+  CreateTweetMutation?: UseMutationResult<void, unknown, void, unknown>;
 }

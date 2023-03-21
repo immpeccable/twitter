@@ -1,11 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { FeedContext } from "../../contexts/FeedContext";
 import { ABSOLUTE_PATH } from "../../utils/constants";
 import BackIcon from "../../utils/images/back.png";
+import { getTweetsOfUser } from "./api";
 
 export const Profile = () => {
-  const { feed, setFeed } = useContext(FeedContext);
+  const { feed } = useContext(FeedContext);
+
+  const {
+    data: tweets,
+    status,
+    error,
+  } = useQuery({
+    queryFn: getTweetsOfUser,
+    queryKey: ["get-tweets-of-user"],
+  });
+
   return (
     <div>
       <header className="inline-flex box-border h-[48px] items-center px-4 gap-12">

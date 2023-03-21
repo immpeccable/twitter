@@ -76,7 +76,6 @@ public class UserController {
     @GetMapping("/current-user")
     public ResponseEntity<User> getCurrentUser(@RequestHeader("Authorization") String authorization) {
         String[] authElements = authorization.split(" ");
-        System.out.println(authElements[1]);
         User user = userAuthenticationProvider.getJWTUser(authElements[1]);
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }

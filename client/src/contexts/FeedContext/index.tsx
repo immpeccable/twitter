@@ -1,15 +1,17 @@
 import React, { createContext, useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { I_FEED, I_FEED_STORE, FEED_OPTIONS } from "./types";
+import { I_FEED, I_FEED_STORE, FEED_OPTIONS, I_TWEET } from "./types";
 import { dummyFeed } from "./utils";
-import { useQuery } from "@tanstack/react-query";
-import { getCurrentUser } from "./api";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { createTweet, getCurrentUser } from "./api";
 
 export const FeedContext = React.createContext<I_FEED_STORE>({
   feed: dummyFeed,
   setFeed: () => {},
   feedType: FEED_OPTIONS.for_you,
   setFeedType: () => {},
+  tweet: { from: "", context: "" },
+  setTweet: () => {},
 });
 
 type ProviderProps = {
@@ -20,6 +22,10 @@ export const FeedProvider = ({ children }: ProviderProps) => {
   const navigate = useNavigate();
   const [feed, setFeed] = useState<I_FEED>({});
   const [feedType, setFeedType] = useState<FEED_OPTIONS>(FEED_OPTIONS.for_you);
+  const [tweet, setTweet] = useState<I_TWEET>({
+    from: "",
+    context: "",
+  });
 
   const {
     status,
@@ -31,6 +37,12 @@ export const FeedProvider = ({ children }: ProviderProps) => {
     onSuccess: (user) => setFeed({ ...feed, of: user }),
     onError: (err) => localStorage.removeItem("jwt_token"),
   });
+
+  const CreateTweetMutation = useMutation({
+    mutationFn: () => createTweet(tweet),
+    mutationKey: ["create-tweet"],
+  });
+
   const feedTypeMemo = useMemo(() => {
     return { feedType, setFeedType };
   }, [feedType, setFeedType]);
@@ -38,11 +50,21 @@ export const FeedProvider = ({ children }: ProviderProps) => {
   useEffect(() => {
     if (window.location.pathname.endsWith("/") && feed.of) {
       navigate("/home");
+      setTweet({ ...tweet, from: feed.of.id });
     }
   }, [feed]);
 
   return (
-    <FeedContext.Provider value={{ feed, setFeed, ...feedTypeMemo }}>
+    <FeedContext.Provider
+      value={{
+        feed,
+        setFeed,
+        ...feedTypeMemo,
+        tweet,
+        setTweet,
+        CreateTweetMutation,
+      }}
+    >
       {children}
     </FeedContext.Provider>
   );
