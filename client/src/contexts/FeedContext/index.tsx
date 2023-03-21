@@ -36,7 +36,7 @@ export const FeedProvider = ({ children }: ProviderProps) => {
   }, [feedType, setFeedType]);
 
   useEffect(() => {
-    if (feed.of) {
+    if (window.location.pathname.endsWith("/") && feed.of) {
       navigate("/home");
     }
   }, [feed]);

@@ -10,7 +10,6 @@ export const Feed = () => {
       {feed.of && (
         <>
           <Header />
-
           <section className="grid grid-cols-1">
             {feed.tweets &&
               feed.tweets?.map((tweet) => <Tweet tweet={tweet} />)}

@@ -5,6 +5,7 @@ import { Entrance } from "./pages/Authentication/Entrance";
 import { Signup } from "./pages/Authentication/Signup";
 import { Login } from "./pages/Authentication/Login";
 import { FeedProvider } from "./contexts/FeedContext";
+import { Profile } from "./pages/Profile";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
               <Route path="signup" element={<Signup />} />
             </Route>
             <Route path="/home" element={<Feed />} />
+            <Route path="/profile/:user_name" element={<Profile />} />
           </Routes>
         </FeedProvider>
       </BrowserRouter>

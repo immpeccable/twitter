@@ -68,6 +68,7 @@ public class UserController {
 
     @PostMapping("/sign-out")
     public ResponseEntity<Void> signOut(@AuthenticationPrincipal @RequestBody Map<String, String> payload) {
+        System.out.println("sign out");
         SecurityContextHolder.clearContext();
         return ResponseEntity.noContent().build();
     }

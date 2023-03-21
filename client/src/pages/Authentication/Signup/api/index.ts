@@ -1,3 +1,4 @@
+import { ENDPOINT } from "./../../../../utils/constants";
 import { I_PROFILE } from "./../../../../contexts/FeedContext/types";
 import React from "react";
 import { FormEvent } from "react";
@@ -8,6 +9,6 @@ export async function signUpApiCall(
   state: I_PROFILE
 ) {
   e.preventDefault();
-  const resp = await axios.post("http://localhost:8080/sign-up", state);
+  const resp = await axios.post(`${ENDPOINT}/sign-up`, state);
   console.log(resp);
 }

@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import React, { FormEvent, useContext, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { FeedContext } from "../../../contexts/FeedContext";
 import { loginApiCall } from "./api";
 
@@ -7,6 +8,7 @@ export const Login = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const { feed, setFeed } = useContext(FeedContext);
+  const navigate = useNavigate();
 
   async function handleLogin(e: FormEvent<HTMLInputElement>) {
     e.preventDefault();
@@ -20,7 +22,7 @@ export const Login = () => {
   const loginMutation = useMutation({
     mutationFn: (e: FormEvent<HTMLInputElement>) => handleLogin(e),
     mutationKey: ["login"],
-    onMutate: () => {},
+    onSuccess: () => navigate("/home"),
   });
 
   const { status } = loginMutation;
