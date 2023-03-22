@@ -19,7 +19,7 @@ export const Feed = () => {
     <>
       <Header />
       <div className="p-4">
-        <section className="flex flex-row w-[90vw] mx-auto">
+        <section className="flex flex-row w-[90vw] mx-auto border-b-[1px] border-gray-400 border-opacity-60 pb-2">
           <img
             src={feed.of.image_url}
             className="w-12 h-12 rounded-full border-[2px] border-black"
@@ -54,7 +54,11 @@ export const Feed = () => {
       <footer className="inline-flex justify-between items-center fixed bottom-0 box-border w-full px-4 py-4">
         <img className="w-[20px] h-[20px]" src={HomeIcon} alt="home icon" />
         <img className="w-[20px] h-[20px]" src={SearchIcon} alt="search icon" />
-        <img className="w-[20px] h-[20px]" src={MessageIcon} alt="message icon" />
+        <img
+          className="w-[20px] h-[20px]"
+          src={MessageIcon}
+          alt="message icon"
+        />
       </footer>
     </>
   ) : (

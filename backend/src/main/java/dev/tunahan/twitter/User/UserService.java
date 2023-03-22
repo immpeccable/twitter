@@ -50,4 +50,10 @@ public class UserService {
         User user = mongoTemplate.findOne(query, User.class);
         return user;
     }
+
+    public List<User> exploreUsers(String name) {
+        List<Criteria> criterias = new ArrayList<Criteria>();
+        Query query = new Query();
+        criterias.add(Criteria.where("profile_name").regex())
+    }
 }
