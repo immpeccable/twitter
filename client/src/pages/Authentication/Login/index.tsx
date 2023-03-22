@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import React, { FormEvent, useContext, useRef } from "react";
+import React, { FormEvent, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { FeedContext } from "../../../contexts/FeedContext";
 import { loginApiCall } from "./api";
@@ -27,15 +27,17 @@ export const Login = () => {
 
   const { status } = loginMutation;
 
-  if (status == "error") {
-    return <div>Something went wrong, please try again.</div>;
-  }
   if (status == "loading") {
     return <div>Logging in, please hold on...</div>;
   }
 
   return (
     <form className="flex flex-col gap-4 items-center">
+      {status == "error" && (
+        <div className="text-center text-white font-semibold">
+          Your username or password is wrong, please try again
+        </div>
+      )}
       <div
         className="relative w-fit bg-black flex flex-col py-4 px-2
          rounded-md gap-2 border-[1px] border-opacity-50 border-gray-500 

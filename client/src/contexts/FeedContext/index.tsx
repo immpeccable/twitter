@@ -35,12 +35,13 @@ export const FeedProvider = ({ children }: ProviderProps) => {
     queryFn: getCurrentUser,
     queryKey: ["fetch-user"],
     onSuccess: (user) => setFeed({ ...feed, of: user }),
-    onError: (err) => localStorage.removeItem("jwt_token"),
+    onError: () => localStorage.removeItem("jwt_token"),
   });
 
   const CreateTweetMutation = useMutation({
     mutationFn: () => createTweet(tweet),
     mutationKey: ["create-tweet"],
+    onSuccess: () => setTweet({ ...tweet, context: "" })
   });
 
   const feedTypeMemo = useMemo(() => {

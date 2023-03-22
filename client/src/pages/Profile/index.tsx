@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { Tweet } from "../../Components/Tweet/indes";
 import { FeedContext } from "../../contexts/FeedContext";
+import { I_TWEET } from "../../contexts/FeedContext/types";
 import { ABSOLUTE_PATH } from "../../utils/constants";
 import BackIcon from "../../utils/images/back.png";
 import { getTweetsOfUser } from "./api";
@@ -46,6 +48,11 @@ export const Profile = () => {
           <h2 className="font-semibold">{feed.of?.profile_name}</h2>
           <h3 className="text-sm opacity-60">{feed.of?.user_name}</h3>
         </div>
+      </section>
+      <section className="grid grid-cols-1">
+        {tweets?.data.map((tweet: I_TWEET) => {
+          return <Tweet tweet={{ ...tweet, from: feed.of! }} />;
+        })}
       </section>
     </div>
   );

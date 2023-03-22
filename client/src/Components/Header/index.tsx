@@ -29,7 +29,7 @@ export const Header = () => {
       <div className="flex flex-row p-4">
         <img
           onClick={() => setIsSidebarOpen(true)}
-          className="w-8 h-8 rounded-full object-cover"
+          className="w-8 h-8 rounded-full object-cover cursor-pointer"
           src={feed.of!.image_url}
         />
         <img className="w-8 h-8 mx-auto" src={tmpImage} />
@@ -45,7 +45,11 @@ export const Header = () => {
               <h1 className="text-lg font-semibold text-white opacity-100">
                 Hesap Bilgileri
               </h1>
-              <img onClick={() => setIsSidebarOpen(false)} src={CloseIcon} />
+              <img
+                className="cursor-pointer"
+                onClick={() => setIsSidebarOpen(false)}
+                src={CloseIcon}
+              />
             </div>
             <Link
               className="cursor-pointer"

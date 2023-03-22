@@ -3,10 +3,9 @@ import { Tweet } from "./../../../Components/Tweet/indes";
 import { ENDPOINT } from "./../../../utils/constants";
 import axios from "axios";
 
-const jwt = localStorage.getItem("jwt_token");
-
 export async function getCurrentUser() {
   try {
+    const jwt = localStorage.getItem("jwt_token");
     const resp = await axios.get(`${ENDPOINT}/current-user`, {
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -21,6 +20,7 @@ export async function getCurrentUser() {
 export async function createTweet(tweet: I_TWEET) {
   console.log(tweet);
   try {
+    const jwt = localStorage.getItem("jwt_token");
     const resp = await axios.post(`${ENDPOINT}/create-tweet`, tweet, {
       headers: {
         Authorization: `Bearer ${jwt}`,

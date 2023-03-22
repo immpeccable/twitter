@@ -14,7 +14,7 @@ export interface I_PROFILE {
 }
 
 export interface I_TWEET {
-  readonly from: string;
+  readonly from: I_PROFILE | string;
   context: string;
   likes?: number;
   retweets?: number;
