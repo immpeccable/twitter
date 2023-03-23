@@ -1,6 +1,5 @@
 package dev.tunahan.twitter.User;
 
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,11 +11,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.tunahan.twitter.config.UserAuthenticationProvider;
 
 import java.nio.CharBuffer;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -78,5 +79,11 @@ public class UserController {
         String[] authElements = authorization.split(" ");
         User user = userAuthenticationProvider.getJWTUser(authElements[1]);
         return new ResponseEntity<User>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/explore-users")
+    public ResponseEntity<List<User>> getUsers(@RequestParam String name) {
+        List<User> users = service.exploreUsers(name);
+        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 }

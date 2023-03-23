@@ -1,12 +1,8 @@
 import React, { useContext, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Header } from "../../Components/Header";
 import { Tweet } from "../../Components/Tweet/indes";
 import { FeedContext } from "../../contexts/FeedContext";
-import TweetIcon from "../../utils/images/tweet.png";
-import HomeIcon from "../../utils/images/home.png";
-import SearchIcon from "../../utils/images/search.png";
-import MessageIcon from "../../utils/images/email.png";
 
 export const Feed = () => {
   const { feed, setFeed, setTweet, tweet, CreateTweetMutation } =
@@ -28,7 +24,7 @@ export const Feed = () => {
             <textarea
               ref={contextRef}
               placeholder="Neler oluyor"
-              className="w-[66vw]"
+              className="w-[66vw] outline-none bg-inherit"
               rows={2}
               onChange={(e) => setTweet({ ...tweet, context: e.target.value })}
             />
@@ -51,15 +47,6 @@ export const Feed = () => {
           {feed.tweets && feed.tweets?.map((tweet) => <Tweet tweet={tweet} />)}
         </section>
       </div>
-      <footer className="inline-flex justify-between items-center fixed bottom-0 box-border w-full px-4 py-4">
-        <img className="w-[20px] h-[20px]" src={HomeIcon} alt="home icon" />
-        <img className="w-[20px] h-[20px]" src={SearchIcon} alt="search icon" />
-        <img
-          className="w-[20px] h-[20px]"
-          src={MessageIcon}
-          alt="message icon"
-        />
-      </footer>
     </>
   ) : (
     <button

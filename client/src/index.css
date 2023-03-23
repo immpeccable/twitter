@@ -19,7 +19,6 @@
 }
 input,
 textarea {
-  all: unset;
 }
 
 @media (prefers-color-scheme: light) {

@@ -6,6 +6,8 @@ import { Signup } from "./pages/Authentication/Signup";
 import { Login } from "./pages/Authentication/Login";
 import { FeedProvider } from "./contexts/FeedContext";
 import { Profile } from "./pages/Profile";
+import { Explore } from "./pages/Explore";
+import Layout from "./Components/Layout";
 
 function App() {
   return (
@@ -16,22 +18,25 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
           </Route>
-          <Route
-            path="/home"
-            element={
-              <FeedProvider>
-                <Feed />
-              </FeedProvider>
-            }
-          />
-          <Route
-            path="/profile/:user_name"
-            element={
-              <FeedProvider>
-                <Profile />
-              </FeedProvider>
-            }
-          />
+          <Route path="/" element={<Layout />}>
+            <Route
+              path="home"
+              element={
+                <FeedProvider>
+                  <Feed />
+                </FeedProvider>
+              }
+            />
+            <Route
+              path="profile/:user_name"
+              element={
+                <FeedProvider>
+                  <Profile />
+                </FeedProvider>
+              }
+            />
+            <Route path="explore" element={<Explore />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>
