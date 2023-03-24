@@ -25,7 +25,7 @@ import java.util.Map;
 public class UserController {
 
     @Autowired
-    private UserService service;
+    private UserService userService;
 
     private UserAuthenticationProvider userAuthenticationProvider;
 
@@ -33,7 +33,7 @@ public class UserController {
 
     public UserController(UserService userService,
             UserAuthenticationProvider userAuthenticationProvider, PasswordEncoder passwordEncoder) {
-        this.service = userService;
+        this.userService = userService;
         this.userAuthenticationProvider = userAuthenticationProvider;
         this.passwordEncoder = passwordEncoder;
     }
@@ -42,15 +42,14 @@ public class UserController {
     public ResponseEntity<User> createUser(@RequestBody Map<String, String> payload) {
         String encodedPassword = passwordEncoder.encode(payload.get("password"));
         return new ResponseEntity<User>(
-                service.createUser(payload.get("profile_name"), payload.get("user_name"), payload.get("image_url"),
+                userService.createUser(payload.get("profile_name"), payload.get("user_name"), payload.get("image_url"),
                         encodedPassword),
                 HttpStatus.OK);
     }
 
     @PostMapping("/sign-in")
     public ResponseEntity<LoginResponseObject> loginUser(@RequestBody Map<String, String> payload) {
-        System.out.println("ia m in sign in");
-        User user = service.logUser(payload.get("user_name"));
+        User user = userService.logUser(payload.get("user_name"));
         LoginResponseObject resp = new LoginResponseObject(user, Status.INVALID_USERNAME);
         if (user != null) {
             if (passwordEncoder.matches(CharBuffer.wrap(payload.get("password")), user.getPassword())) {
@@ -69,7 +68,6 @@ public class UserController {
 
     @PostMapping("/sign-out")
     public ResponseEntity<Void> signOut(@AuthenticationPrincipal @RequestBody Map<String, String> payload) {
-        System.out.println("sign out");
         SecurityContextHolder.clearContext();
         return ResponseEntity.noContent().build();
     }
@@ -83,7 +81,25 @@ public class UserController {
 
     @GetMapping("/explore-users")
     public ResponseEntity<List<User>> getUsers(@RequestParam String name) {
-        List<User> users = service.exploreUsers(name);
+        System.out.println("i am inside the exploreeee!!");
+        List<User> users = userService.exploreUsers(name);
+        System.out.println("user length");
+        System.out.println(users.size());
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-user-by-username")
+    public ResponseEntity<User> getUserByUsername(@RequestParam String user_name) {
+        System.out.println(user_name);
+        User user = userService.getUser(user_name);
+        return new ResponseEntity<User>(user, HttpStatus.OK);
+    }
+
+    @PostMapping("/follow")
+    public ResponseEntity<List<User>> follow(@RequestBody Map<String, String> payload) {
+        String fromUsername = payload.get("fromUsername");
+        String toUsername = payload.get("toUsername");
+        List<User> resp = userService.follow(fromUsername, toUsername);
+        return new ResponseEntity<List<User>>(resp, HttpStatus.OK);
     }
 }

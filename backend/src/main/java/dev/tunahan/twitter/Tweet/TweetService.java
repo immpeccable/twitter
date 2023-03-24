@@ -32,7 +32,6 @@ public class TweetService {
         if (user_id != null) {
             criterias.add(Criteria.where("from").is(user_id));
         }
-        System.out.println(user_id);
         query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[criterias.size()])));
         List<Tweet> tweets = mongoTemplate.find(query, Tweet.class);
         return tweets;

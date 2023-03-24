@@ -38,7 +38,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 }
             }
         }
-        System.out.println("hellow orld!!");
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 }

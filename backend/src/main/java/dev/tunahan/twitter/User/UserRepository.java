@@ -13,4 +13,7 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
     @Query("{ $or: [ { 'user_name': { $regex: ?0, $options: 'i' } }, { 'profile_name': { $regex: ?0, $options: 'i' } } ] }")
     List<User> findByUsernameContainingIgnoreCase(String keyword);
 
+    @Query("{'user_name' : ?0}")
+    User findByUserName(String user_name);
+
 }
