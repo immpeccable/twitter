@@ -9,11 +9,11 @@ export const Tweet = ({ tweet }: I_TWEET_PROPS) => {
   return (
     <div className="flex flex-row border-b-[1px] border-gray-400 border-opacity-40 py-4 px-4">
       <div className="shrink-0">
-        <img className="w-12 h-12 rounded-full" src={tweet.from.image_url} />
+        <img className="w-12 h-12 rounded-full" src={tweet.from?.image_url} />
       </div>
       <div className="flex flex-col ml-4 w-full">
         <header className="flex flex-row items-center">
-          <h2 className="text-xl font-bold">{tweet.from.profile_name}</h2>
+          <h2 className="text-xl font-bold">{tweet.from?.profile_name}</h2>
           <h3 className="ml-2 text-sm font-medium opacity-60">
             <span>@</span>
             {tweet.from.user_name}
@@ -23,19 +23,19 @@ export const Tweet = ({ tweet }: I_TWEET_PROPS) => {
         <footer className="mt-4 flex flex-row justify-between">
           <button className="flex flex-row gap-2 items-center">
             <img src={mentionImg} />
-            {tweet.mentions > 0 && (
+            {tweet.mentions && tweet.mentions > 0 && (
               <span className="text-sm opacity-60">{tweet.mentions}</span>
             )}
           </button>
           <button className="flex flex-row gap-2 items-center">
             <img src={retweeetImg} />
-            {tweet.retweets > 0 && (
+            {tweet.retweets && tweet.retweets > 0 && (
               <span className="text-sm opacity-60">{tweet.retweets}</span>
             )}
           </button>
           <button className="flex flex-row gap-2 items-center">
             <img src={likeImg} />
-            {tweet.likes > 0 && (
+            {tweet.likes && tweet.likes > 0 && (
               <span className="text-sm opacity-60">{tweet.likes}</span>
             )}
           </button>

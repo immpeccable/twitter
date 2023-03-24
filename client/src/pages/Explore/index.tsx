@@ -1,19 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useContext, useEffect } from "react";
 import { exploreUsers } from "./api";
-import { FeedContext } from "../../contexts/FeedContext";
 import SearchIcon from "../../utils/images/search.png";
 import useDebounceValue from "./utils/useDebounceValue";
-import { I_PROFILE } from "../../contexts/FeedContext/types";
+import { I_PROFILE } from "../../utils/types";
 import { Link } from "react-router-dom";
 import { ABSOLUTE_PATH } from "../../utils/constants";
+import { getCurrentUser } from "../../utils/api";
 
 export const Explore = () => {
-  const { feed } = useContext(FeedContext);
   const [searchValue, setSearchValue] = React.useState("");
   const debouncedSearchValue = useDebounceValue({
     value: searchValue,
-    delay: 300,
+    delay: 500,
   });
   const {
     data: users,
@@ -21,19 +20,34 @@ export const Explore = () => {
     error,
     refetch,
   } = useQuery({
-    queryFn: () => {
-      console.log("fetching userrs...");
-      return exploreUsers(debouncedSearchValue);
+    queryFn: async ({ signal }) => {
+      const res = await exploreUsers(debouncedSearchValue, signal!);
+      return res;
     },
     queryKey: ["explore-users", debouncedSearchValue],
-    enabled: searchValue !== "",
+    enabled: debouncedSearchValue !== "",
+    onError: (err) => console.log(JSON.stringify(err)),
+    retry: false,
   });
 
+  const {
+    status: getCurrentUserStatus,
+    error: getCurrentUserError,
+    data: user,
+  } = useQuery({
+    queryFn: getCurrentUser,
+    queryKey: ["current-user-explore"],
+    onError: () => localStorage.removeItem("jwt_token"),
+  });
+
+  if (status == "error") {
+    return <div>there is something wrong, please refresh the page</div>;
+  }
   return (
     <section className="p-6">
       <div className="inline-flex gap-4 w-full items-center">
         <img
-          src={feed.of?.image_url}
+          src={user?.data?.image_url!}
           alt="profile image"
           className="w-8 h-8 rounded-full border-black border-2"
         />

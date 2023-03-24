@@ -1,13 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import React, { FormEvent, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { FeedContext } from "../../../contexts/FeedContext";
 import { loginApiCall } from "./api";
 
 export const Login = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
-  const { feed, setFeed } = useContext(FeedContext);
   const navigate = useNavigate();
 
   async function handleLogin(e: FormEvent<HTMLInputElement>) {
@@ -16,7 +14,6 @@ export const Login = () => {
       user_name: usernameRef!.current!.value,
       password: passwordRef!.current!.value,
     });
-    setFeed({ ...feed, of: resp.data.user });
   }
 
   const loginMutation = useMutation({

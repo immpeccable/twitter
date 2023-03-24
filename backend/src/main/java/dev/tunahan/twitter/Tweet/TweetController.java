@@ -1,9 +1,11 @@
 package dev.tunahan.twitter.Tweet;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.tunahan.twitter.User.User;
+import dev.tunahan.twitter.User.UserDto;
 import dev.tunahan.twitter.User.UserRepository;
 import dev.tunahan.twitter.User.UserService;
 import dev.tunahan.twitter.config.UserAuthenticationProvider;
@@ -29,6 +32,9 @@ public class TweetController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private UserAuthenticationProvider userAuthenticationProvider;
 
     public TweetController(TweetService tweetService,
@@ -42,16 +48,21 @@ public class TweetController {
             @RequestHeader("Authorization") String authorization) {
         String[] authElements = authorization.split(" ");
         User from = userAuthenticationProvider.getJWTUser(authElements[1]);
-        Tweet newTweet = tweetService.createTweet(from.getId(), payload.get("context"));
-        return new ResponseEntity<Tweet>(newTweet, HttpStatus.OK);
-    }
+        User dbUser = userRepository.findByUserName(from.getUser_name());
+        Tweet newTweet = tweetService.createTweet(from, payload.get("context"));
 
-    @GetMapping("/tweets-of-user")
-    public ResponseEntity<List<Tweet>> getTweetsOfUser(
-            @RequestParam String user_name) {
-        User of = userService.getUser(user_name);
-        List<Tweet> tweets = tweetService.fetchTweetsOfUser(of.getId());
-        return new ResponseEntity<List<Tweet>>(tweets, HttpStatus.OK);
+        if (dbUser.getTweets() != null) {
+            dbUser.getTweets().add(newTweet);
+        } else {
+            dbUser.setTweets(Arrays.asList(newTweet));
+        }
+
+        userRepository.save(dbUser);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Connection", "close");
+
+        return new ResponseEntity<Tweet>(newTweet, headers, HttpStatus.OK);
     }
 
 }

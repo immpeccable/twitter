@@ -6,15 +6,16 @@ export enum FEED_OPTIONS {
 }
 
 export interface I_PROFILE {
+  readonly id: string;
   image_url: string;
   profile_name: string;
   user_name: string;
   password: string;
-  readonly id: string;
+  tweets?: I_TWEET[];
 }
 
 export interface I_TWEET {
-  readonly from: I_PROFILE | string;
+  readonly from: I_PROFILE;
   context: string;
   likes?: number;
   retweets?: number;

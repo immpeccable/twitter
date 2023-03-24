@@ -1,6 +1,7 @@
 package dev.tunahan.twitter.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.tunahan.twitter.config.UserAuthenticationProvider;
 
 import java.nio.CharBuffer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +64,9 @@ public class UserController {
         if (resp.getStatus() == Status.PASS && user != null) {
             user.setToken(userAuthenticationProvider.createToken(payload.get("user_name")));
         }
-        return new ResponseEntity<LoginResponseObject>(resp, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Connection", "close");
+        return new ResponseEntity<LoginResponseObject>(resp, headers, HttpStatus.OK);
 
     }
 
@@ -76,23 +80,30 @@ public class UserController {
     public ResponseEntity<User> getCurrentUser(@RequestHeader("Authorization") String authorization) {
         String[] authElements = authorization.split(" ");
         User user = userAuthenticationProvider.getJWTUser(authElements[1]);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Connection", "close");
+        return new ResponseEntity<User>(user, headers, HttpStatus.OK);
     }
 
     @GetMapping("/explore-users")
-    public ResponseEntity<List<User>> getUsers(@RequestParam String name) {
-        System.out.println("i am inside the exploreeee!!");
-        List<User> users = userService.exploreUsers(name);
-        System.out.println("user length");
-        System.out.println(users.size());
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+    public ResponseEntity<List<UserDto>> getUsers(@RequestParam String name) {
+        System.out.println("name: " + name);
+        List<UserDto> users = userService.exploreUsers(name);
+        System.out.println("user length: " + users.size());
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Connection", "close");
+        return new ResponseEntity<List<UserDto>>(users, headers,
+                HttpStatus.OK);
+
     }
 
     @GetMapping("/get-user-by-username")
-    public ResponseEntity<User> getUserByUsername(@RequestParam String user_name) {
+    public ResponseEntity<UserDto> getUserByUsername(@RequestParam String user_name) {
         System.out.println(user_name);
-        User user = userService.getUser(user_name);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        UserDto user = userService.getUserByUsername(user_name);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Connection", "close");
+        return new ResponseEntity<UserDto>(user, headers, HttpStatus.OK);
     }
 
     @PostMapping("/follow")
@@ -100,6 +111,8 @@ public class UserController {
         String fromUsername = payload.get("fromUsername");
         String toUsername = payload.get("toUsername");
         List<User> resp = userService.follow(fromUsername, toUsername);
-        return new ResponseEntity<List<User>>(resp, HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Connection", "close");
+        return new ResponseEntity<List<User>>(resp, headers, HttpStatus.OK);
     }
 }

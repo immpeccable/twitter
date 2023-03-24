@@ -21,21 +21,8 @@ public class TweetService {
     @Autowired
     private MongoTemplate mongoTemplate;
 
-    public Tweet createTweet(ObjectId from, String context) {
+    public Tweet createTweet(User from, String context) {
         Tweet tweet = repository.insert(new Tweet(from, context));
         return tweet;
     }
-
-    public List<Tweet> fetchTweetsOfUser(ObjectId user_id) {
-        List<Criteria> criterias = new ArrayList<Criteria>();
-        Query query = new Query();
-        if (user_id != null) {
-            criterias.add(Criteria.where("from").is(user_id));
-        }
-        query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[criterias.size()])));
-        List<Tweet> tweets = mongoTemplate.find(query, Tweet.class);
-        return tweets;
-
-    }
-
 }

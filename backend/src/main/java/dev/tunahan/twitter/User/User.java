@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import dev.tunahan.twitter.Tweet.Tweet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,4 +47,7 @@ public class User {
 
     @DBRef
     private List<User> followings;
+
+    @DBRef
+    private List<Tweet> tweets;
 }

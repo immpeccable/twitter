@@ -1,9 +1,8 @@
-import { I_TWEET } from "./../types";
-import { Tweet } from "./../../../Components/Tweet/indes";
-import { ENDPOINT } from "./../../../utils/constants";
-import axios from "axios";
+import { I_TWEET, I_PROFILE } from "../types";
+import { ENDPOINT } from "../constants";
+import axios, { AxiosResponse } from "axios";
 
-export async function getCurrentUser() {
+export async function getCurrentUser(): Promise<AxiosResponse<I_PROFILE, any>> {
   try {
     const jwt = localStorage.getItem("jwt_token");
     const resp = await axios.get(`${ENDPOINT}/current-user`, {
@@ -11,13 +10,13 @@ export async function getCurrentUser() {
         Authorization: `Bearer ${jwt}`,
       },
     });
-    return resp.data;
+    return resp;
   } catch (err) {
     throw new Error("jwt_token is expired");
   }
 }
 
-export async function createTweet(tweet: I_TWEET) {
+export async function createTweet(tweet: { context: string }) {
   console.log(tweet);
   try {
     const jwt = localStorage.getItem("jwt_token");

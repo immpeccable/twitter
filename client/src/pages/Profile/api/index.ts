@@ -1,7 +1,7 @@
 import { Header } from "./../../../Components/Header/index";
-import { I_TWEET, I_PROFILE } from "./../../../contexts/FeedContext/types";
 import { ENDPOINT } from "./../../../utils/constants";
 import axios, { AxiosResponse } from "axios";
+import { I_TWEET, I_PROFILE } from "../../../utils/types";
 
 export async function getTweetsOfUser(
   user_name: string
@@ -29,6 +29,7 @@ export async function getUserByUsername(
       user_name: user_name,
     },
   });
+  console.log("fetched user:", user);
   return user;
 }
 
@@ -37,6 +38,7 @@ export async function follow(
   toUsername: string
 ): Promise<AxiosResponse<I_PROFILE[], any>> {
   const jwt = localStorage.getItem("jwt_token");
+  console.log(fromUsername, toUsername);
   const resp = await axios.post(
     `${ENDPOINT}/follow`,
     {

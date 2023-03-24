@@ -1,14 +1,13 @@
 import React, { useContext, useState } from "react";
 import tmpImage from "../../utils/images/twitter.png";
-import { FeedContext } from "../../contexts/FeedContext";
-import { FEED_OPTIONS } from "../../contexts/FeedContext/types";
 import CloseIcon from "../../utils/images/close.png";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ABSOLUTE_PATH, ENDPOINT } from "../../utils/constants";
+import { getCurrentUser } from "../../utils/api";
+import { useQuery } from "@tanstack/react-query";
 
 export const Header = () => {
-  const { feed, setFeed, feedType, setFeedType } = useContext(FeedContext);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -24,13 +23,23 @@ export const Header = () => {
     console.log(resp);
   }
 
+  const {
+    status,
+    error,
+    data: user,
+  } = useQuery({
+    queryFn: getCurrentUser,
+    queryKey: ["current-user-header"],
+    onError: () => localStorage.removeItem("jwt_token"),
+  });
+
   return (
     <header>
       <div className="flex flex-row p-4">
         <img
           onClick={() => setIsSidebarOpen(true)}
           className="w-8 h-8 rounded-full object-cover cursor-pointer"
-          src={feed.of!.image_url}
+          src={user?.data?.image_url}
         />
         <img className="w-8 h-8 mx-auto" src={tmpImage} />
       </div>
@@ -53,18 +62,18 @@ export const Header = () => {
             </div>
             <Link
               className="cursor-pointer"
-              to={`http://localhost:5173/profile/${feed.of?.user_name}`}
+              to={`http://localhost:5173/profile/${user?.data?.user_name}`}
             >
               <img
-                src={feed.of?.image_url}
+                src={user?.data?.image_url}
                 className="w-10 h-10 rounded-full object-cover mt-8"
               />
             </Link>
             <h2 className="text-lg font-semibold opacity-100 text-white mt-4">
-              {feed.of?.profile_name}
+              {user?.data?.profile_name}
             </h2>
             <h3 className=" text-white opacity-60">
-              {"@" + feed.of?.user_name}
+              {"@" + user?.data?.user_name}
             </h3>
             <div className="inline-flex gap-8">
               <div className="inline-flex gap-[3px] mt-2 items-center">
@@ -81,7 +90,9 @@ export const Header = () => {
               </div>
             </div>
             <ul className="flex flex-col mt-8">
-              <Link to={`http://localhost:5173/profile/${feed.of?.user_name}`}>
+              <Link
+                to={`http://localhost:5173/profile/${user?.data?.user_name}`}
+              >
                 <li className="text-white opacity-100">Profile</li>
               </Link>
               <button onClick={handleSignout}>Çıkış Yap</button>
@@ -89,7 +100,7 @@ export const Header = () => {
           </div>
         </>
       )}
-      <nav className="flex flex-row border-b-[1px] border-gray-400 justify-center">
+      {/* <nav className="flex flex-row border-b-[1px] border-gray-400 justify-center">
         <div
           onClick={() => setFeedType(FEED_OPTIONS.for_you)}
           className="flex flex-row justify-center grow hover text-opacity-80 hover:bg-white hover:bg-opacity-10 "
@@ -118,7 +129,7 @@ export const Header = () => {
             Followings
           </button>
         </div>
-      </nav>
+      </nav> */}
     </header>
   );
 };

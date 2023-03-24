@@ -2,8 +2,10 @@ package dev.tunahan.twitter.Tweet;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import dev.tunahan.twitter.User.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Tweet {
 
-    Tweet(ObjectId from, String context) {
+    Tweet(User from, String context) {
         this.from = from;
         this.context = context;
     }
@@ -23,8 +25,13 @@ public class Tweet {
     private ObjectId id;
 
     private String context;
-    private ObjectId from;
-    private ObjectId[] likes;
-    private ObjectId[] retweets;
-    private ObjectId[] mentions;
+
+    @DBRef
+    private User from;
+    @DBRef
+    private User[] likes;
+    @DBRef
+    private User[] retweets;
+    @DBRef
+    private User[] mentions;
 }

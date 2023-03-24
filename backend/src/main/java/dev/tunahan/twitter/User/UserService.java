@@ -1,21 +1,17 @@
 package dev.tunahan.twitter.User;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import dev.tunahan.twitter.config.UserAuthenticationProvider;
+import dev.tunahan.twitter.Tweet.Tweet;
+import dev.tunahan.twitter.Tweet.TweetDto;
 
 @Service
 public class UserService {
@@ -43,13 +39,52 @@ public class UserService {
         return user;
     }
 
-    public User getUser(String user_name) {
-        return repository.findByUserName(user_name);
+    public UserDto getUserByUsername(String user_name) {
+        User user = repository.findByUserName(user_name);
+
+        List<FollowerDto> followers = new ArrayList<FollowerDto>();
+        List<FollowerDto> followings = new ArrayList<FollowerDto>();
+        List<TweetDto> tweets = new ArrayList<TweetDto>();
+
+        if (user.getFollowers() != null) {
+            for (User follower : user.getFollowers()) {
+                followers.add(
+                        new FollowerDto(follower.getUser_name(), follower.getProfile_name(),
+                                follower.getImage_url()));
+            }
+        }
+        if (user.getFollowings() != null) {
+            for (User following : user.getFollowings()) {
+                followings.add(new FollowerDto(following.getUser_name(),
+                        following.getProfile_name(),
+                        following.getImage_url()));
+            }
+        }
+        if (user.getTweets() != null) {
+            for (Tweet tweet : user.getTweets()) {
+                tweets.add(new TweetDto(tweet.getContext()));
+            }
+        }
+        System.out.println("service result: " + followers.size() + " " +
+                followings.size());
+        return new UserDto(user.getUser_name(), user.getProfile_name(),
+                user.getImage_url(), followers, followings,
+                tweets);
     }
 
-    public List<User> exploreUsers(String name) {
-        List<User> users = repository.findByUsernameContainingIgnoreCase(name);
-        return users;
+    public List<UserDto> exploreUsers(String name) {
+        try {
+            List<User> users = repository.findByUsernameContainingIgnoreCase(name);
+            List<UserDto> rUsers = new ArrayList<UserDto>();
+            for (User user : users) {
+                rUsers.add(new UserDto(user.getUser_name(), user.getProfile_name(), user.getImage_url()));
+            }
+            return rUsers;
+        } catch (Exception e) {
+            System.out.println("exception is " + e);
+            return Arrays.asList();
+        }
+
     }
 
     public List<User> follow(String fromUsername, String toUsername) {
