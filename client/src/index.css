@@ -19,6 +19,7 @@
 }
 input,
 textarea {
+  outline: none;
 }
 
 @media (prefers-color-scheme: light) {

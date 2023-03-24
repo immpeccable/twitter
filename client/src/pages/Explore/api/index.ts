@@ -1,8 +1,11 @@
+import { I_PROFILE } from "./../../../contexts/FeedContext/types";
 import { ENDPOINT } from "./../../../utils/constants";
-import axios from "axios";
-export async function exploreUsers(name: string) {
+import axios, { AxiosResponse } from "axios";
+export async function exploreUsers(
+  name: string
+): Promise<AxiosResponse<I_PROFILE[], any>> {
   const jwt = localStorage.getItem("jwt_token");
-  console.log("hwt: ", jwt);
+  console.log("explore jwt: ", jwt);
   const response = await axios.get(`${ENDPOINT}/explore-users`, {
     params: {
       name: name,

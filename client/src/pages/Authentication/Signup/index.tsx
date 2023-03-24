@@ -2,7 +2,7 @@ import React, { useState, useReducer, FormEvent } from "react";
 import { I_PROFILE } from "../../../contexts/FeedContext/types";
 import { I_REDUCER_ACTION } from "./types";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { signUpApiCall } from "./api";
 
@@ -48,9 +48,13 @@ const initialState: I_PROFILE = {
 
 export const Signup = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
+  const navigate = useNavigate();
+
   const signUpMutation = useMutation({
     mutationFn: (e: FormEvent<HTMLInputElement>) => signUpApiCall(e, state),
     mutationKey: ["sign-up"],
+    onSuccess: () => navigate("/login"),
   });
 
   const { status } = signUpMutation;

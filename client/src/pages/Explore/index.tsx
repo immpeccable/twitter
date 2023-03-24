@@ -4,6 +4,9 @@ import { exploreUsers } from "./api";
 import { FeedContext } from "../../contexts/FeedContext";
 import SearchIcon from "../../utils/images/search.png";
 import useDebounceValue from "./utils/useDebounceValue";
+import { I_PROFILE } from "../../contexts/FeedContext/types";
+import { Link } from "react-router-dom";
+import { ABSOLUTE_PATH } from "../../utils/constants";
 
 export const Explore = () => {
   const { feed } = useContext(FeedContext);
@@ -25,7 +28,6 @@ export const Explore = () => {
     queryKey: ["explore-users", debouncedSearchValue],
     enabled: searchValue !== "",
   });
-  console.log(users);
 
   return (
     <section className="p-6">
@@ -45,6 +47,26 @@ export const Explore = () => {
           type="text"
           className="bg-white bg-opacity-[0.07] rounded-full text-white pl-12 py-2 focus:outline-blue-600 focus:outline-2"
         />
+      </div>
+
+      <div className="grid grid-cols-1 mt-8">
+        {users?.data.map((user: I_PROFILE) => (
+          <Link to={`${ABSOLUTE_PATH}/profile/${user.user_name}`}>
+            <div className="flex flex-row gap-4 py-2">
+              <img
+                className="w-12 h-12 rounded-full border-black border-2"
+                src={user.image_url}
+                alt="explore-image"
+              />
+              <div className="flex flex-col">
+                <h2 className="text-white font-semibold">
+                  {user.profile_name}
+                </h2>
+                <h4 className="opacity-60 text-sm">{"@" + user.user_name}</h4>
+              </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );
