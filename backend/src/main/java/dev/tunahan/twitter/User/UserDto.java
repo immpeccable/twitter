@@ -2,7 +2,6 @@ package dev.tunahan.twitter.User;
 
 import java.util.List;
 
-import dev.tunahan.twitter.Tweet.Tweet;
 import dev.tunahan.twitter.Tweet.TweetDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;

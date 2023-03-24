@@ -1,8 +1,5 @@
 package dev.tunahan.twitter.Tweet;
 
-import java.util.List;
-
-import dev.tunahan.twitter.Tweet.Tweet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import dev.tunahan.twitter.config.UserAuthenticationProvider;
 
 import java.nio.CharBuffer;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
