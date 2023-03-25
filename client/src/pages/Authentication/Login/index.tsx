@@ -18,7 +18,11 @@ export const Login = () => {
 
   const loginMutation = useMutation({
     mutationFn: (e: FormEvent<HTMLInputElement>) => handleLogin(e),
-    mutationKey: ["login"],
+    mutationKey: [
+      "login",
+      usernameRef.current?.value,
+      passwordRef.current?.value,
+    ],
     onSuccess: () => navigate("/home"),
   });
 

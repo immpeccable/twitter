@@ -28,17 +28,6 @@ public class UserService {
         return user;
     }
 
-    public User logUser(String user_name) {
-        List<Criteria> criterias = new ArrayList<Criteria>();
-        Query query = new Query();
-        if (user_name != null && !user_name.isEmpty()) {
-            criterias.add(Criteria.where("user_name").is(user_name));
-        }
-        query.addCriteria(new Criteria().andOperator(criterias.toArray(new Criteria[criterias.size()])));
-        User user = mongoTemplate.findOne(query, User.class);
-        return user;
-    }
-
     public UserDto getUserByUsername(String user_name) {
         User user = repository.findByUserName(user_name);
 
@@ -47,29 +36,32 @@ public class UserService {
         List<TweetDto> tweets = new ArrayList<TweetDto>();
 
         if (user.getFollowers() != null) {
-            for (User follower : user.getFollowers()) {
+            for (UserDto follower : user.getFollowers()) {
                 followers.add(
                         new FollowerDto(follower.getUser_name(), follower.getProfile_name(),
                                 follower.getImage_url()));
             }
         }
         if (user.getFollowings() != null) {
-            for (User following : user.getFollowings()) {
+            for (UserDto following : user.getFollowings()) {
                 followings.add(new FollowerDto(following.getUser_name(),
                         following.getProfile_name(),
                         following.getImage_url()));
             }
         }
         if (user.getTweets() != null) {
-            for (Tweet tweet : user.getTweets()) {
-                tweets.add(new TweetDto(tweet.getContext()));
+            for (TweetDto tweet : user.getTweets()) {
+                tweets.add(new TweetDto(tweet.getContext(), tweet.getCreatedDate()));
             }
         }
         System.out.println("service result: " + followers.size() + " " +
                 followings.size());
         return new UserDto(user.getUser_name(), user.getProfile_name(),
-                user.getImage_url(), followers, followings,
-                tweets);
+                user.getImage_url(), followers, followings, tweets);
+    }
+
+    public User findDbUser(String user_name) {
+        return repository.findByUserName(user_name);
     }
 
     public List<UserDto> exploreUsers(String name) {
@@ -91,17 +83,21 @@ public class UserService {
         User from = repository.findByUserName(fromUsername);
         User to = repository.findByUserName(toUsername);
 
+        UserDto fromDto = new UserDto(from.getUser_name(), from.getProfile_name(), from.getImage_url());
+        UserDto toDto = new UserDto(to.getUser_name(), to.getProfile_name(), to.getImage_url());
+
         if (from.getFollowings() == null) {
-            from.setFollowings(Arrays.asList(to));
+            from.setFollowings(
+                    Arrays.asList(toDto));
         } else {
-            from.getFollowings().add(to);
+            from.getFollowings().add(toDto);
 
         }
         if (to.getFollowers() == null) {
-            to.setFollowers(Arrays.asList(from));
+            to.setFollowers(Arrays.asList(fromDto));
         } else {
 
-            to.getFollowers().add(from);
+            to.getFollowers().add(fromDto);
         }
 
         repository.save(from);

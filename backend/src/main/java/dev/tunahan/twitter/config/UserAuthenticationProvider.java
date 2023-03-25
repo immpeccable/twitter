@@ -49,7 +49,7 @@ public class UserAuthenticationProvider {
                 .sign(algorithm);
     }
 
-    public User getJWTUser(String token) {
+    public String getJWTUser(String token) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
         JWTVerifier verifier = JWT.require(algorithm)
@@ -57,7 +57,7 @@ public class UserAuthenticationProvider {
 
         DecodedJWT decoded = verifier.verify(token);
 
-        return authenticationService.findByLogin(decoded.getIssuer());
+        return decoded.getIssuer();
     }
 
     public Authentication validateToken(String token) {

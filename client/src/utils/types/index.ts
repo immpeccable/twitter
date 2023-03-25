@@ -12,9 +12,12 @@ export interface I_PROFILE {
   user_name: string;
   password: string;
   tweets?: I_TWEET[];
+  followers: I_PROFILE[];
+  followings: I_PROFILE[];
 }
 
 export interface I_TWEET {
+  readonly id: string;
   readonly from: I_PROFILE;
   context: string;
   likes?: number;

@@ -1,10 +1,11 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createTweet, getCurrentUser } from "../../utils/api";
 import { Header } from "../../Components/Header";
 import { Tweet } from "../../Components/Tweet/indes";
 import { I_TWEET } from "../../utils/types";
+import { getFeed } from "./api";
 
 export const Feed = () => {
   const navigate = useNavigate();
@@ -12,7 +13,6 @@ export const Feed = () => {
   const [tweet, setTweet] = useState<{ context: string }>({
     context: "",
   });
-
   const {
     status,
     error,
@@ -20,14 +20,55 @@ export const Feed = () => {
     refetch: fetchCurrentUser,
   } = useQuery({
     queryFn: getCurrentUser,
-    queryKey: ["current-user-feed"],
-    onError: () => localStorage.removeItem("jwt_token"),
+    queryKey: ["current-user"],
+  });
+
+  const {
+    data: infiniteFeed,
+    error: infiniteError,
+    status: infiniteStatus,
+    isFetching,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery({
+    queryFn: async ({ pageParam = "" }): Promise<I_TWEET[]> => {
+      const resp = await getFeed(pageParam);
+      return resp;
+    },
+    queryKey: ["infinite-feed"],
+    getNextPageParam: (lastPage: I_TWEET[]) => {
+      console.log("last page: ", lastPage);
+      if (lastPage && lastPage.length > 0) {
+        return lastPage[lastPage.length - 1].id;
+      }
+      return "";
+    },
+    onSuccess: (data) => console.log(data),
   });
 
   const CreateTweetMutation = useMutation({
     mutationFn: () => createTweet(tweet),
     onSuccess: () => fetchCurrentUser(),
   });
+
+  const bottomBoundaryRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (
+        bottomBoundaryRef.current &&
+        bottomBoundaryRef.current.getBoundingClientRect().top <=
+          window.innerHeight + 500
+      ) {
+        fetchNextPage();
+      }
+    };
+
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [fetchNextPage]);
+
   if (status == "loading") {
     return (
       <div className="text-white font-bold top-1/2 left-1/2 absolute -translate-x-32 -translate-y-10 w-64 h-20">
@@ -35,7 +76,18 @@ export const Feed = () => {
       </div>
     );
   }
-  return status != "error" ? (
+
+  if (status == "error") {
+    return (
+      <button
+        className="m-auto absolute left-1/2 box-border w-80 h-20 top-1/2 -translate-x-40 -translate-y-10 rounded-full bg-black text-white font-semibold"
+        onClick={() => navigate("/login")}
+      >
+        Your session is expired, please login again
+      </button>
+    );
+  }
+  return (
     <>
       <Header />
       <div className="p-4">
@@ -67,17 +119,22 @@ export const Feed = () => {
             </div>
           </form>
         </section>
+        {infiniteFeed?.pages.map((page, index) => (
+          <section className="grid grid-cols-1">
+            {page.map((tweet: I_TWEET) => (
+              <Tweet tweet={tweet} />
+            ))}
+          </section>
+        ))}
         {/* <section className="grid grid-cols-1">
-          {feed.tweets && feed.tweets?.map((tweet) => <Tweet tweet={tweet} />)}
+          {feed?.data.map((tweet: I_TWEET) => (
+            <Tweet tweet={tweet} />
+          ))}
         </section> */}
+        <div ref={bottomBoundaryRef} style={{ height: "10px" }}>
+          {isFetchingNextPage ? "Loading more..." : "Load More"}
+        </div>
       </div>
     </>
-  ) : (
-    <button
-      className="m-auto absolute left-1/2 box-border w-80 h-20 top-1/2 -translate-x-40 -translate-y-10 rounded-full bg-black text-white font-semibold"
-      onClick={() => navigate("/login")}
-    >
-      Your session is expired, please login again
-    </button>
   );
 };

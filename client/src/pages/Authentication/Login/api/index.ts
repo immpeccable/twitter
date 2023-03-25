@@ -9,6 +9,7 @@ export async function loginApiCall(
   logInfo: I_LOG_INFO
 ) {
   const resp = await axios.post(`${ENDPOINT}/sign-in`, logInfo);
+  console.log("log in response: ", resp);
   console.log("token: ", resp);
   localStorage.setItem("jwt_token", resp.data.user.token);
   return resp;

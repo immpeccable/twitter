@@ -50,22 +50,21 @@ public class UserController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<LoginResponseObject> loginUser(@RequestBody Map<String, String> payload) {
-        User user = userService.logUser(payload.get("user_name"));
-        LoginResponseObject resp = new LoginResponseObject(user, Status.INVALID_USERNAME);
-        if (user != null) {
+        User user = userService.findDbUser(payload.get("user_name"));
+        UserDto respUser = userService.getUserByUsername(user.getUser_name());
+        LoginResponseObject resp = new LoginResponseObject(respUser,
+                Status.INVALID_USERNAME);
+        if (respUser != null) {
             if (passwordEncoder.matches(CharBuffer.wrap(payload.get("password")), user.getPassword())) {
                 resp.setStatus(Status.PASS);
-
             } else {
                 resp.setStatus(Status.INVALID_PASSWORD);
             }
         }
-        if (resp.getStatus() == Status.PASS && user != null) {
-            user.setToken(userAuthenticationProvider.createToken(payload.get("user_name")));
+        if (resp.getStatus() == Status.PASS && respUser != null) {
+            respUser.setToken(userAuthenticationProvider.createToken(payload.get("user_name")));
         }
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Connection", "close");
-        return new ResponseEntity<LoginResponseObject>(resp, headers, HttpStatus.OK);
+        return new ResponseEntity<LoginResponseObject>(resp, HttpStatus.OK);
 
     }
 
@@ -76,12 +75,13 @@ public class UserController {
     }
 
     @GetMapping("/current-user")
-    public ResponseEntity<User> getCurrentUser(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<UserDto> getCurrentUser(@RequestHeader("Authorization") String authorization) {
         String[] authElements = authorization.split(" ");
-        User user = userAuthenticationProvider.getJWTUser(authElements[1]);
+        String user_name = userAuthenticationProvider.getJWTUser(authElements[1]);
+        UserDto user = userService.getUserByUsername(user_name);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Connection", "close");
-        return new ResponseEntity<User>(user, headers, HttpStatus.OK);
+        return new ResponseEntity<UserDto>(user, headers, HttpStatus.OK);
     }
 
     @GetMapping("/explore-users")

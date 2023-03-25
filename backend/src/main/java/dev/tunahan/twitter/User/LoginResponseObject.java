@@ -19,11 +19,11 @@ public class LoginResponseObject {
         this.status = status;
     }
 
-    LoginResponseObject(User user, Status status) {
+    LoginResponseObject(UserDto user, Status status) {
         this.status = status;
         this.user = user;
     }
 
     private Status status;
-    private User user;
+    private UserDto user;
 }

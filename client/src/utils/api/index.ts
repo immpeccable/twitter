@@ -10,9 +10,10 @@ export async function getCurrentUser(): Promise<AxiosResponse<I_PROFILE, any>> {
         Authorization: `Bearer ${jwt}`,
       },
     });
+    console.log("get current user: ", resp);
     return resp;
   } catch (err) {
-    throw new Error("jwt_token is expired");
+    throw new Error(JSON.stringify(err));
   }
 }
 

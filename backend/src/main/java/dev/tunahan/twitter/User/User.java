@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import dev.tunahan.twitter.Tweet.Tweet;
+import dev.tunahan.twitter.Tweet.TweetDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,12 +42,9 @@ public class User {
     private String password;
     private String token;
 
-    @DBRef
-    private List<User> followers;
+    private List<UserDto> followers;
 
-    @DBRef
-    private List<User> followings;
+    private List<UserDto> followings;
 
-    @DBRef
-    private List<Tweet> tweets;
+    private List<TweetDto> tweets;
 }
