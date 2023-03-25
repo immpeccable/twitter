@@ -6,8 +6,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +35,7 @@ public class TweetService {
         return tweet;
     }
 
-    public List<TweetDto> fetchFeedTweetsForUser(String user_name) {
+    public List<TweetDto> fetchFeedTweetsForUser(String user_name, LocalDateTime cursor) {
         User dbUser = userRepository.findByUserName(user_name);
         List<UserDto> followings = dbUser.getFollowings();
 
@@ -44,13 +47,16 @@ public class TweetService {
             followings = Arrays.asList(dtoUser);
         }
 
-        List<Tweet> tweets = tweetRepository.findByFromInOrderByCreatedDateDesc(followings);
+        System.out.println("followings length: " + followings.toString());
+
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("createdDate").descending());
+        List<Tweet> tweets = tweetRepository.getFeedFromDatabase(cursor,
+                followings, pageRequest);
 
         List<TweetDto> dtoTweets = new ArrayList<TweetDto>();
 
         for (Tweet tweet : tweets) {
 
-            System.out.println(tweet.getId());
             dtoTweets.add(new TweetDto(tweet.getId(), tweet.getFrom(), tweet.getContext(), tweet.getCreatedDate()));
         }
         return dtoTweets;

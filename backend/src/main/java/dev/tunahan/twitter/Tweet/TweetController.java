@@ -1,6 +1,9 @@
 package dev.tunahan.twitter.Tweet;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -69,11 +72,19 @@ public class TweetController {
 
     @GetMapping("/feed")
     public ResponseEntity<List<TweetDto>> getFeed(@RequestHeader("Authorization") String authorization,
-            @RequestParam String cursor) {
-        System.out.println();
+            @RequestParam(required = false, defaultValue = "0") Long cursor) {
+
+        LocalDateTime dateCursor;
+        if (cursor == 0) {
+            dateCursor = LocalDateTime.now();
+        } else {
+            Instant instant = Instant.ofEpochSecond(cursor);
+            dateCursor = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
+        }
+        System.out.println("date cursor: " + dateCursor.toString());
         String[] authElements = authorization.split(" ");
         String user_name = userAuthenticationProvider.getJWTUser(authElements[1]);
-        List<TweetDto> tweets = tweetService.fetchFeedTweetsForUser(user_name);
+        List<TweetDto> tweets = tweetService.fetchFeedTweetsForUser(user_name, dateCursor);
         HttpHeaders headers = new HttpHeaders();
         headers.set("Connection", "close");
         return new ResponseEntity<List<TweetDto>>(tweets, headers, HttpStatus.OK);

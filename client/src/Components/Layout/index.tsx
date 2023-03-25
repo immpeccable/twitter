@@ -6,6 +6,7 @@ const Layout = () => {
   return (
     <>
       <Outlet />
+      <div className="h-40"></div>
       <Footer />
     </>
   );

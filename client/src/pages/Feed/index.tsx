@@ -13,6 +13,7 @@ export const Feed = () => {
   const [tweet, setTweet] = useState<{ context: string }>({
     context: "",
   });
+
   const {
     status,
     error,
@@ -31,6 +32,7 @@ export const Feed = () => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
+    refetch,
   } = useInfiniteQuery({
     queryFn: async ({ pageParam = "" }): Promise<I_TWEET[]> => {
       const resp = await getFeed(pageParam);
@@ -49,7 +51,7 @@ export const Feed = () => {
 
   const CreateTweetMutation = useMutation({
     mutationFn: () => createTweet(tweet),
-    onSuccess: () => fetchCurrentUser(),
+    onSuccess: () => refetch(),
   });
 
   const bottomBoundaryRef = useRef<HTMLDivElement>(null);
@@ -59,9 +61,11 @@ export const Feed = () => {
       if (
         bottomBoundaryRef.current &&
         bottomBoundaryRef.current.getBoundingClientRect().top <=
-          window.innerHeight + 500
+          window.innerHeight + 500 &&
+        !isFetchingNextPage
       ) {
         fetchNextPage();
+        window.removeEventListener("scroll", onScroll);
       }
     };
 
