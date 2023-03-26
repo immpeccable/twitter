@@ -70,6 +70,15 @@ public class TweetController {
         return new ResponseEntity<TweetDto>(newTweetDto, HttpStatus.OK);
     }
 
+    @PostMapping("/like-tweet")
+    public ResponseEntity<Tweet> likeTweet(@RequestHeader("Authorization") String authorization,
+            @RequestBody Map<String, String> payload) {
+        String[] authElements = authorization.split(" ");
+        String user_name = userAuthenticationProvider.getJWTUser(authElements[1]);
+        User user = userRepository.findByUserName(user_name);
+        ObjectId id = new ObjectId(payload.get("date"), payload.get("timestamp"));
+    }
+
     @GetMapping("/feed")
     public ResponseEntity<List<TweetDto>> getFeed(@RequestHeader("Authorization") String authorization,
             @RequestParam(required = false, defaultValue = "0") Long cursor) {
@@ -85,6 +94,7 @@ public class TweetController {
         String[] authElements = authorization.split(" ");
         String user_name = userAuthenticationProvider.getJWTUser(authElements[1]);
         List<TweetDto> tweets = tweetService.fetchFeedTweetsForUser(user_name, dateCursor);
+        System.out.println("tweet id: " + tweets.get(9).getId());
         HttpHeaders headers = new HttpHeaders();
         headers.set("Connection", "close");
         return new ResponseEntity<List<TweetDto>>(tweets, headers, HttpStatus.OK);

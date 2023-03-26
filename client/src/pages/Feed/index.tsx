@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { createTweet, getCurrentUser } from "../../utils/api";
+import { createTweet, getCurrentUser, likeTweet } from "../../utils/api";
 import { Header } from "../../Components/Header";
 import { Tweet } from "../../Components/Tweet/indes";
 import { I_TWEET, ObjectId } from "../../utils/types";
@@ -41,12 +41,12 @@ export const Feed = () => {
   } = useInfiniteQuery({
     queryFn: async ({ pageParam = "" }): Promise<I_TWEET[]> => {
       const resp = await getFeed(pageParam);
+      console.log(resp);
       return resp;
     },
     queryKey: ["infinite-feed"],
     getNextPageParam: (lastPage: I_TWEET[]) => {
       if (lastPage && lastPage.length > 0) {
-        console.log("prev page: ", lastPage);
         if (cursor != lastPage[lastPage.length - 1].id) {
           setCursor(lastPage[lastPage.length - 1].id);
         }

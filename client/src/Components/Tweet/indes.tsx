@@ -4,8 +4,16 @@ import likeImg from "../../utils/images/like.png";
 import retweeetImg from "../../utils/images/retweet.png";
 import mentionImg from "../../utils/images/mention.png";
 import shareImg from "../../utils/images/share.png";
+import { likeTweet } from "../../utils/api";
+import { useMutation } from "@tanstack/react-query";
+import { ObjectId } from "../../utils/types";
 
 export const Tweet = ({ tweet }: I_TWEET_PROPS) => {
+  const likeTweetMutation = useMutation({
+    mutationFn: (id: ObjectId) => likeTweet(id),
+    mutationKey: ["like-tweet"],
+  });
+
   return (
     <div className="flex flex-row border-b-[1px] border-gray-400 border-opacity-40 py-4 px-4">
       <div className="shrink-0">
