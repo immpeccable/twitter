@@ -14,6 +14,7 @@ export const Login = () => {
       user_name: usernameRef!.current!.value,
       password: passwordRef!.current!.value,
     });
+    return resp;
   }
 
   const loginMutation = useMutation({
@@ -23,7 +24,12 @@ export const Login = () => {
       usernameRef.current?.value,
       passwordRef.current?.value,
     ],
-    onSuccess: () => navigate("/home"),
+    onSuccess: (resp) => {
+      if (resp.data.status == "PASS") {
+        console.log(resp.data);
+        navigate("/home");
+      }
+    },
   });
 
   const { status } = loginMutation;

@@ -5,8 +5,13 @@ export enum FEED_OPTIONS {
   followings = "Followings",
 }
 
+export interface ObjectId {
+  date: number;
+  timestamp: number;
+}
+
 export interface I_PROFILE {
-  readonly id: string;
+  readonly id: ObjectId;
   image_url: string;
   profile_name: string;
   user_name: string;
@@ -14,15 +19,17 @@ export interface I_PROFILE {
   tweets?: I_TWEET[];
   followers: I_PROFILE[];
   followings: I_PROFILE[];
+  createdDate: number[];
 }
 
 export interface I_TWEET {
-  readonly id: string;
+  readonly id: ObjectId;
   readonly from: I_PROFILE;
   context: string;
   likes?: number;
   retweets?: number;
   mentions?: number;
+  createdDate?: number[];
 }
 
 export interface I_FEED {

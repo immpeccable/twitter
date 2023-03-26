@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createTweet, getCurrentUser } from "../../utils/api";
 import { Header } from "../../Components/Header";
 import { Tweet } from "../../Components/Tweet/indes";
-import { I_TWEET } from "../../utils/types";
+import { I_TWEET, ObjectId } from "../../utils/types";
 import { getFeed } from "./api";
 
 export const Feed = () => {
@@ -12,6 +12,11 @@ export const Feed = () => {
   const contextRef = useRef<HTMLTextAreaElement>(null);
   const [tweet, setTweet] = useState<{ context: string }>({
     context: "",
+  });
+
+  const [cursor, setCursor] = useState<ObjectId>({
+    date: 0,
+    timestamp: 0,
   });
 
   const {
@@ -40,13 +45,15 @@ export const Feed = () => {
     },
     queryKey: ["infinite-feed"],
     getNextPageParam: (lastPage: I_TWEET[]) => {
-      console.log("last page: ", lastPage);
       if (lastPage && lastPage.length > 0) {
+        console.log("prev page: ", lastPage);
+        if (cursor != lastPage[lastPage.length - 1].id) {
+          setCursor(lastPage[lastPage.length - 1].id);
+        }
         return lastPage[lastPage.length - 1].id;
       }
       return "";
     },
-    onSuccess: (data) => console.log(data),
   });
 
   const CreateTweetMutation = useMutation({
@@ -57,7 +64,7 @@ export const Feed = () => {
   const bottomBoundaryRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => {
+    function onScroll() {
       if (
         bottomBoundaryRef.current &&
         bottomBoundaryRef.current.getBoundingClientRect().top <=
@@ -67,11 +74,10 @@ export const Feed = () => {
         fetchNextPage();
         window.removeEventListener("scroll", onScroll);
       }
-    };
-
+    }
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, [fetchNextPage]);
+  }, [cursor]);
 
   if (status == "loading") {
     return (
@@ -130,11 +136,6 @@ export const Feed = () => {
             ))}
           </section>
         ))}
-        {/* <section className="grid grid-cols-1">
-          {feed?.data.map((tweet: I_TWEET) => (
-            <Tweet tweet={tweet} />
-          ))}
-        </section> */}
         <div ref={bottomBoundaryRef} style={{ height: "10px" }}>
           {isFetchingNextPage ? "Loading more..." : "Load More"}
         </div>
