@@ -18,8 +18,8 @@ The Twitter clone currently supports the following features:
 
 The following technologies were used to build this Twitter clone:
 
-- Frontend: React, Redux, Tailwind CSS
-- Backend: Node.js, Express, MongoDB
+- Frontend: React, Tanstack/React-Query, Tailwind CSS
+- Backend: Spring, Java, MongoDB
 - Authentication: JSON Web Tokens (JWT)
 
 ## Installation and Setup
@@ -29,10 +29,13 @@ To run the Twitter clone locally, follow these steps:
 1. Clone the repository
 2. Install dependencies for both the frontend and backend using `npm install` in their respective directories
 3. Create a `.env` file in the backend directory and add the following environment variables:
-    - `MONGODB_URI`: URI for connecting to MongoDB
-    - `JWT_SECRET`: Secret for generating JSON Web Tokens
-4. Start the backend server using `npm start` in the backend directory
-5. Start the frontend server using `npm start` in the frontend directory
+    MONGO_DATABASE=twitter-db
+    MONGO_USER=tunahandundar2221
+    MONGO_PASSWORD=15724939796tT.
+    MONGO_CLUSTER=twitter-cluster.oeumwoc.mongodb.net
+    SECRET_KEY=my-secret-key
+5. Start the backend server using `npm run serverstart` in the backend directory
+6. Start the frontend server using `npm dev` in the frontend directory
 
 ## Future Improvements
 
