@@ -55,9 +55,6 @@ Contributions to the Twitter clone are always welcome! To contribute, please fol
 4. Push your changes to your fork
 5. Create a pull request from your fork to the main repository
 
-## Credits
-
-This Twitter clone project was built by [Your Name] as part of [Course Name or Personal Project]. Special thanks to [Instructor Name] for their guidance and support throughout the project.
 
 ## License
 
