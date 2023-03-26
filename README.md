@@ -35,7 +35,7 @@ To run the Twitter clone locally, follow these steps:
     - MONGO_CLUSTER=twitter-cluster.oeumwoc.mongodb.net
     - SECRET_KEY=my-secret-key
 5. Start the backend server using `npm run serverstart` in the backend directory
-6. Start the frontend server using `npm dev` in the frontend directory
+6. Start the frontend server using `npm run dev` in the frontend directory
 
 ## Future Improvements
 
