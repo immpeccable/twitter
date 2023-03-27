@@ -34,7 +34,6 @@ public class UserService {
 
         List<FollowerDto> followers = new ArrayList<FollowerDto>();
         List<FollowerDto> followings = new ArrayList<FollowerDto>();
-        List<TweetDto> tweets = new ArrayList<TweetDto>();
 
         for (UserDto follower : user.getFollowers()) {
             followers.add(
@@ -57,6 +56,8 @@ public class UserService {
         for (TweetDto like : user.getLikes()) {
             likes.add(new TweetDto(like.getContext(), like.getCreatedDate()));
         }
+
+        Collections.reverse(likes);
         return likes;
 
     }

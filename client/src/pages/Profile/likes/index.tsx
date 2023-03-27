@@ -2,15 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useParams } from "react-router-dom";
 import { Tweet } from "../../../Components/Tweet/indes";
-import { I_PROFILE, I_TWEET } from "../../../utils/types";
-import { getTweetsOfUser, getUserByUsername } from "../api";
+import { I_TWEET } from "../../../utils/types";
+import { getLikesOfUser, getUserByUsername } from "../api";
 
-type Props = {
-  from: I_PROFILE;
-};
-
-export const TweetsOfUser = () => {
+export const LikesOfUser = () => {
   const { user_name } = useParams();
+
+  const {
+    data: tweets,
+    status,
+    error,
+  } = useQuery({
+    queryFn: () => getLikesOfUser(user_name!),
+    queryKey: ["likes", user_name],
+  });
 
   const {
     data: user,
@@ -19,15 +24,6 @@ export const TweetsOfUser = () => {
   } = useQuery({
     queryFn: () => getUserByUsername(user_name!),
     queryKey: ["get-user", user_name],
-  });
-
-  const {
-    data: tweets,
-    status: tweetsStatus,
-    error: tweetsError,
-  } = useQuery({
-    queryFn: () => getTweetsOfUser(user_name!),
-    queryKey: ["tweets", user_name],
   });
 
   return (

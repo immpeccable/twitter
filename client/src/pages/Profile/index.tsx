@@ -10,7 +10,6 @@ import { follow, getUserByUsername } from "./api";
 
 export const Profile = () => {
   const { user_name } = useParams();
-  const [tweets, setTweets] = useState<I_TWEET[]>([]);
 
   const {
     data: visitedProfile,
@@ -87,6 +86,8 @@ export const Profile = () => {
     const formattedDate = formatter.format(dateObject);
     return formattedDate;
   }
+
+  console.log("location: ", window.location.pathname);
 
   return (
     <div>
@@ -175,10 +176,49 @@ export const Profile = () => {
           )}
         </div>
       </section>
-      <nav>
-        <Link to={`${ABSOLUTE_PATH}/profile/${user_name}`}>tweets</Link>
-        <Link to={`${ABSOLUTE_PATH}/profile/${user_name}/likes`}>likes</Link>
-        <Link to={`${ABSOLUTE_PATH}/profile/${user_name}`}>replies</Link>
+      <nav className="w-full flex justify-between items-center border-b-[1px] border-gray-300 border-opacity-20">
+        <Link
+          className="hover:bg-black hover:bg-opacity-10 grow text-center py-4 font-semibold"
+          to={`${ABSOLUTE_PATH}/profile/${user_name}`}
+        >
+          <span
+            className={
+              window.location.pathname.endsWith(`${user_name}`)
+                ? "text-white opacity-100 border-b-4 border-blue-600 py-4 rounded-sm font-semibold"
+                : "text-white opacity-60 font-semibold"
+            }
+          >
+            Tweets
+          </span>
+        </Link>
+        <Link
+          className="hover:bg-black hover:bg-opacity-10 grow text-center py-4 font-semibold"
+          to={`${ABSOLUTE_PATH}/profile/${user_name}/likes`}
+        >
+          <span
+            className={
+              window.location.pathname.endsWith(`${user_name}/likes`)
+                ? "text-white opacity-100 border-b-4 border-blue-600 py-4 rounded-sm font-semibold"
+                : "text-white opacity-60 font-semibold"
+            }
+          >
+            Likes
+          </span>
+        </Link>
+        <Link
+          className="hover:bg-black hover:bg-opacity-10 grow text-center py-4 font-semibold"
+          to={`${ABSOLUTE_PATH}/profile/${user_name}/replies`}
+        >
+          <span
+            className={
+              window.location.pathname.endsWith(`${user_name}/replies`)
+                ? "text-white opacity-100 border-b-4 border-blue-600 py-4 rounded-sm font-semibold"
+                : "text-white opacity-60 font-semibold"
+            }
+          >
+            Replies
+          </span>
+        </Link>
       </nav>
       <Outlet />
     </div>

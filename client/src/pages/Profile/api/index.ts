@@ -13,6 +13,16 @@ export async function getTweetsOfUser(user_name: string): Promise<I_TWEET[]> {
   return tweets.data;
 }
 
+export async function getLikesOfUser(user_name: string): Promise<I_TWEET[]> {
+  const jwt = localStorage.getItem("jwt_token");
+  const resp = await axios.get(`${ENDPOINT}/${user_name}/likes`, {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  return resp.data;
+}
+
 export async function getUserByUsername(user_name: string): Promise<I_PROFILE> {
   const jwt = localStorage.getItem("jwt_token");
   const user = await axios.get(`${ENDPOINT}/get-user-by-username`, {
