@@ -7,6 +7,7 @@ import { Login } from "./pages/Authentication/Login";
 import { Profile } from "./pages/Profile";
 import { Explore } from "./pages/Explore";
 import Layout from "./Components/Layout";
+import { TweetsOfUser } from "./pages/Profile/tweets";
 
 function App() {
   return (
@@ -19,7 +20,9 @@ function App() {
           </Route>
           <Route path="/" element={<Layout />}>
             <Route path="home" element={<Feed />} />
-            <Route path="profile/:user_name" element={<Profile />} />
+            <Route path="profile/:user_name" element={<Profile />}>
+              <Route path="" element={<TweetsOfUser />} />
+            </Route>
             <Route path="explore" element={<Explore />} />
           </Route>
         </Routes>

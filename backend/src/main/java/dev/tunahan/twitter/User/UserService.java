@@ -2,6 +2,7 @@ package dev.tunahan.twitter.User;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,29 +36,41 @@ public class UserService {
         List<FollowerDto> followings = new ArrayList<FollowerDto>();
         List<TweetDto> tweets = new ArrayList<TweetDto>();
 
-        if (user.getFollowers() != null) {
-            for (UserDto follower : user.getFollowers()) {
-                followers.add(
-                        new FollowerDto(follower.getUser_name(), follower.getProfile_name(),
-                                follower.getImage_url()));
-            }
+        for (UserDto follower : user.getFollowers()) {
+            followers.add(
+                    new FollowerDto(follower.getUser_name(), follower.getProfile_name(),
+                            follower.getImage_url()));
         }
-        if (user.getFollowings() != null) {
-            for (UserDto following : user.getFollowings()) {
-                followings.add(new FollowerDto(following.getUser_name(),
-                        following.getProfile_name(),
-                        following.getImage_url()));
-            }
+        for (UserDto following : user.getFollowings()) {
+            followings.add(new FollowerDto(following.getUser_name(),
+                    following.getProfile_name(),
+                    following.getImage_url()));
         }
-        if (user.getTweets() != null) {
-            for (TweetDto tweet : user.getTweets()) {
-                tweets.add(new TweetDto(tweet.getContext(), tweet.getCreatedDate()));
-            }
-        }
-        System.out.println("service result: " + followers.size() + " " +
-                followings.size());
         return new UserDto(user.getUser_name(), user.getProfile_name(),
-                user.getImage_url(), followers, followings, tweets);
+                user.getImage_url(), followers, followings);
+    }
+
+    public List<TweetDto> getLikes(String user_name) {
+        User user = repository.findByUserName(user_name);
+        List<TweetDto> likes = new ArrayList<TweetDto>();
+
+        for (TweetDto like : user.getLikes()) {
+            likes.add(new TweetDto(like.getContext(), like.getCreatedDate()));
+        }
+        return likes;
+
+    }
+
+    public List<TweetDto> getTweets(String user_name) {
+        User user = repository.findByUserName(user_name);
+        List<TweetDto> tweets = new ArrayList<TweetDto>();
+
+        for (TweetDto like : user.getTweets()) {
+            tweets.add(new TweetDto(like.getContext(), like.getCreatedDate()));
+        }
+        Collections.reverse(tweets);
+        return tweets;
+
     }
 
     public User findDbUser(String user_name) {

@@ -12,6 +12,7 @@ export interface ObjectId {
 
 export interface I_PROFILE {
   readonly id: ObjectId;
+  readonly stringId: string;
   image_url: string;
   profile_name: string;
   user_name: string;
@@ -24,6 +25,7 @@ export interface I_PROFILE {
 
 export interface I_TWEET {
   readonly id: ObjectId;
+  readonly stringId: string;
   readonly from: I_PROFILE;
   context: string;
   likes?: number;

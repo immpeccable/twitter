@@ -41,7 +41,7 @@ export const Feed = () => {
   } = useInfiniteQuery({
     queryFn: async ({ pageParam = "" }): Promise<I_TWEET[]> => {
       const resp = await getFeed(pageParam);
-      console.log(resp);
+      console.log("reps: ", resp);
       return resp;
     },
     queryKey: ["infinite-feed"],

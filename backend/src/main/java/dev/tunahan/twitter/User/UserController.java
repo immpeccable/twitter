@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.tunahan.twitter.Tweet.TweetDto;
 import dev.tunahan.twitter.config.UserAuthenticationProvider;
 
 import java.nio.CharBuffer;
@@ -86,14 +88,11 @@ public class UserController {
 
     @GetMapping("/explore-users")
     public ResponseEntity<List<UserDto>> getUsers(@RequestParam String name) {
-        System.out.println("name: " + name);
         List<UserDto> users = userService.exploreUsers(name);
-        System.out.println("user length: " + users.size());
         HttpHeaders headers = new HttpHeaders();
         headers.set("Connection", "close");
         return new ResponseEntity<List<UserDto>>(users, headers,
                 HttpStatus.OK);
-
     }
 
     @GetMapping("/get-user-by-username")
@@ -103,6 +102,22 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Connection", "close");
         return new ResponseEntity<UserDto>(user, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("{user_name}/likes")
+    public ResponseEntity<List<TweetDto>> getLikesOfUser(@PathVariable("user_name") String user_name) {
+        List<TweetDto> likes = userService.getLikes(user_name);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Connection", "close");
+        return new ResponseEntity<List<TweetDto>>(likes, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("{user_name}/tweets")
+    public ResponseEntity<List<TweetDto>> getTweetsOfUser(@PathVariable("user_name") String user_name) {
+        List<TweetDto> likes = userService.getTweets(user_name);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Connection", "close");
+        return new ResponseEntity<List<TweetDto>>(likes, headers, HttpStatus.OK);
     }
 
     @PostMapping("/follow")

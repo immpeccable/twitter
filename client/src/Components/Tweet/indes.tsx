@@ -10,7 +10,7 @@ import { ObjectId } from "../../utils/types";
 
 export const Tweet = ({ tweet }: I_TWEET_PROPS) => {
   const likeTweetMutation = useMutation({
-    mutationFn: (id: ObjectId) => likeTweet(id),
+    mutationFn: (id: string) => likeTweet(id),
     mutationKey: ["like-tweet"],
   });
 
@@ -41,7 +41,10 @@ export const Tweet = ({ tweet }: I_TWEET_PROPS) => {
               <span className="text-sm opacity-60">{tweet.retweets}</span>
             )}
           </button>
-          <button className="flex flex-row gap-2 items-center">
+          <button
+            onClick={() => likeTweetMutation.mutate(tweet.stringId)}
+            className="flex flex-row gap-2 items-center"
+          >
             <img src={likeImg} />
             {tweet.likes && tweet.likes > 0 && (
               <span className="text-sm opacity-60">{tweet.likes}</span>

@@ -7,7 +7,7 @@ export async function getFeed(cursor: {
   timestamp: number;
 }): Promise<I_TWEET[]> {
   const jwt = localStorage.getItem("jwt_token");
-
+  console.log("cursor: ", cursor);
   const resp = await axios.get(`${ENDPOINT}/feed`, {
     headers: {
       Authorization: `Bearer ${jwt}`,

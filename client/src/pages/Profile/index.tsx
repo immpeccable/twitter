@@ -1,15 +1,16 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import React, { useContext } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, Outlet, useParams } from "react-router-dom";
 import { getCurrentUser } from "../../utils/api";
 import { Tweet } from "../../Components/Tweet/indes";
 import { ABSOLUTE_PATH } from "../../utils/constants";
 import BackIcon from "../../utils/images/back.png";
 import { I_TWEET } from "../../utils/types";
-import { follow, getTweetsOfUser, getUserByUsername } from "./api";
+import { follow, getUserByUsername } from "./api";
 
 export const Profile = () => {
   const { user_name } = useParams();
+  const [tweets, setTweets] = useState<I_TWEET[]>([]);
 
   const {
     data: visitedProfile,
@@ -33,7 +34,7 @@ export const Profile = () => {
 
   const followMutation = useMutation({
     mutationFn: () =>
-      follow(owner?.data?.user_name!, visitedProfile?.data?.user_name!),
+      follow(owner?.data?.user_name!, visitedProfile?.user_name!),
     mutationKey: ["follow"],
     onError: (er) => console.log(JSON.stringify(er)),
     onSuccess: () => {
@@ -42,13 +43,9 @@ export const Profile = () => {
     },
   });
 
-  const unFollowMutation = useMutation({
-    mutationKey: ["unfollow"],
-  });
-
   function isAlreadyFollowing(): boolean {
-    if (visitedProfile?.data && owner?.data) {
-      const vpr = visitedProfile.data;
+    if (visitedProfile && owner?.data) {
+      const vpr = visitedProfile;
       const own = owner.data;
       console.log(
         "visited profile followers: ",
@@ -102,39 +99,33 @@ export const Profile = () => {
         </Link>
         <div className="flex flex-col">
           <h2 className="text-white opacity-100 font-semibold">
-            {visitedProfile?.data?.profile_name}
+            {visitedProfile?.profile_name}
           </h2>
           <h4 className="opacity-60 text-sm">
-            {visitedProfile?.data.tweets?.length} Tweet
+            {visitedProfile?.tweets?.length} Tweet
           </h4>
         </div>
       </header>
       <section>
         <img
           className="w-[100vw] h-[25vh] object-cover"
-          src={visitedProfile?.data?.image_url}
+          src={visitedProfile?.image_url}
           alt="kapak fotosu"
         />
         <img
           className="w-20 h-20 -translate-y-10 rounded-full border-[2px] ml-4 border-black"
-          src={visitedProfile?.data?.image_url}
+          src={visitedProfile?.image_url}
           alt="profile image"
         />
         <div className="flex flex-row justify-between">
           <div className="px-4 -translate-y-4">
-            <h2 className="font-semibold">
-              {visitedProfile?.data.profile_name}
-            </h2>
-            <h3 className="text-sm opacity-60">
-              {visitedProfile?.data.user_name}
-            </h3>
+            <h2 className="font-semibold">{visitedProfile?.profile_name}</h2>
+            <h3 className="text-sm opacity-60">{visitedProfile?.user_name}</h3>
             <div className="inline-flex mt-2">
-              {visitedProfile?.data.tweets!.length! > 0 && (
+              {visitedProfile?.tweets!.length! > 0 && (
                 <h3 className="opacity-70 text-sm">
                   Joined{" "}
-                  {getFormattedDate(
-                    visitedProfile?.data.tweets![0].createdDate!
-                  )}
+                  {getFormattedDate(visitedProfile?.tweets![0].createdDate!)}
                 </h3>
               )}
             </div>
@@ -145,7 +136,7 @@ export const Profile = () => {
               >
                 <h2 className="">
                   <span className="opacity-100 text-white text-opacity-100 font-semibold">
-                    {visitedProfile?.data.followings.length}
+                    {visitedProfile?.followings.length}
                   </span>{" "}
                   <span className="opacity-60">followings</span>
                 </h2>
@@ -156,14 +147,14 @@ export const Profile = () => {
               >
                 <h2 className="">
                   <span className="opacity-100 text-white text-opacity-100 font-semibold">
-                    {visitedProfile?.data.followers.length}
+                    {visitedProfile?.followers.length}
                   </span>{" "}
                   <span className="opacity-60">followers</span>
                 </h2>
               </Link>
             </div>
           </div>
-          {owner?.data?.user_name !== visitedProfile?.data?.user_name && (
+          {owner?.data?.user_name !== visitedProfile?.user_name && (
             <div className="-translate-y-16 px-4">
               {isAlreadyFollowing() ? (
                 <button
@@ -184,19 +175,12 @@ export const Profile = () => {
           )}
         </div>
       </section>
-      <section className="grid grid-cols-1 mb-12">
-        {visitedProfile?.data &&
-          [...visitedProfile?.data?.tweets!]
-            .reverse()
-            .map((tweet: I_TWEET, index) => {
-              return (
-                <Tweet
-                  key={index}
-                  tweet={{ ...tweet, from: visitedProfile?.data }}
-                />
-              );
-            })}
-      </section>
+      <nav>
+        <Link to={`${ABSOLUTE_PATH}/profile/${user_name}`}>tweets</Link>
+        <Link to={`${ABSOLUTE_PATH}/profile/${user_name}/likes`}>likes</Link>
+        <Link to={`${ABSOLUTE_PATH}/profile/${user_name}`}>replies</Link>
+      </nav>
+      <Outlet />
     </div>
   );
 };

@@ -17,7 +17,7 @@ public class TweetDto {
 
     @Id
     private ObjectId id;
-
+    private String stringId;
     private UserDto from;
     private String context;
     private LocalDateTime createdDate;

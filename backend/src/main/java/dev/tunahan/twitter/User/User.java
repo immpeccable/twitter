@@ -1,5 +1,6 @@
 package dev.tunahan.twitter.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.types.ObjectId;
@@ -42,9 +43,12 @@ public class User {
     private String password;
     private String token;
 
-    private List<UserDto> followers;
+    private List<UserDto> followers = new ArrayList<UserDto>();
 
-    private List<UserDto> followings;
+    private List<UserDto> followings = new ArrayList<UserDto>();;
 
-    private List<TweetDto> tweets;
+    private List<TweetDto> tweets = new ArrayList<TweetDto>();
+    private List<TweetDto> likes = new ArrayList<TweetDto>();;
+    private List<TweetDto> retweets = new ArrayList<TweetDto>();;
+    private List<TweetDto> replies = new ArrayList<TweetDto>();;
 }

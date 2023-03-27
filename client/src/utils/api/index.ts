@@ -11,7 +11,6 @@ export async function getCurrentUser(): Promise<AxiosResponse<I_PROFILE, any>> {
         Authorization: `Bearer ${jwt}`,
       },
     });
-    console.log("get current user: ", resp);
     return resp;
   } catch (err) {
     throw new Error(JSON.stringify(err));
@@ -33,17 +32,14 @@ export async function createTweet(tweet: { context: string }) {
   }
 }
 
-export async function likeTweet(tweetId: ObjectId) {
-  let id = null;
-  const objectId = new ObjectID(tweetId.timestamp);
-  id = objectId.toString();
+export async function likeTweet(id: string) {
   const jwt = localStorage.getItem("jwt_token");
-
+  console.log("id: ", id);
   const resp = await axios.post(`${ENDPOINT}/tweet/${id}/like`, null, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
   });
-  console.log(resp);
+  console.log("like response:  ", resp);
   return resp;
 }

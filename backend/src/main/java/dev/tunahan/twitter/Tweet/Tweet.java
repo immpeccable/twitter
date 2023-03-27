@@ -1,7 +1,9 @@
 package dev.tunahan.twitter.Tweet;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -30,7 +32,7 @@ public class Tweet {
     private String context;
     private LocalDateTime createdDate;
     private UserDto from;
-    private UserDto[] likes;
-    private UserDto[] retweets;
-    private UserDto[] mentions;
+    private List<UserDto> likes = new ArrayList<UserDto>();
+    private List<UserDto> retweets = new ArrayList<UserDto>();;
+    private List<UserDto> mentions = new ArrayList<UserDto>();;
 }

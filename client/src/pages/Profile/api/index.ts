@@ -3,23 +3,17 @@ import { ENDPOINT } from "./../../../utils/constants";
 import axios, { AxiosResponse } from "axios";
 import { I_TWEET, I_PROFILE } from "../../../utils/types";
 
-export async function getTweetsOfUser(
-  user_name: string
-): Promise<AxiosResponse<I_TWEET[], any>> {
+export async function getTweetsOfUser(user_name: string): Promise<I_TWEET[]> {
   const jwt = localStorage.getItem("jwt_token");
-  const tweets = await axios.get(`${ENDPOINT}/tweets-of-user`, {
+  const tweets = await axios.get(`${ENDPOINT}/${user_name}/tweets`, {
     headers: {
       Authorization: `Bearer ${jwt}`,
     },
-    params: { user_name: user_name },
   });
-  console.log("tweets: ", tweets);
-  return tweets;
+  return tweets.data;
 }
 
-export async function getUserByUsername(
-  user_name: string
-): Promise<AxiosResponse<I_PROFILE, any>> {
+export async function getUserByUsername(user_name: string): Promise<I_PROFILE> {
   const jwt = localStorage.getItem("jwt_token");
   const user = await axios.get(`${ENDPOINT}/get-user-by-username`, {
     headers: {
@@ -30,7 +24,7 @@ export async function getUserByUsername(
     },
   });
   console.log("fetched user:", user);
-  return user;
+  return user.data;
 }
 
 export async function follow(
@@ -51,6 +45,5 @@ export async function follow(
       },
     }
   );
-  console.log("follow response: ", resp);
   return resp;
 }
